@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Levantamento144</title>
+  <link rel="icon" type="image/png" href="./favicon.png" />
+  <link rel="stylesheet" href="./ui.css" />
+  <script src="./qr-local.js"></script>
+  <style>
+
+:root { --app-text:#22272d; --app-muted:#677078; --app-stroke:#cbd0d5; --app-accent:#30363d; --app-bg:#f5f6f7; }
+html.dark { --app-text:#f4f5f6; --app-muted:#c5c8ce; --app-stroke:#49505a; --app-accent:#e6e8eb; --app-bg:#121416; }
+* { box-sizing: border-box; }
+body { font-family: Inter, ui-sans-serif, system-ui, sans-serif; color:var(--app-text); background:var(--app-bg); }
+.font-mono {font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Consolas, monospace;}
+/* Todas as superfícies e controles usam cantos retos. */
+#app-ui :is(section,article,div,input,select,textarea,button,label,a,span),
+#toast-container *, #print-sheet * { border-radius: 0 !important; }
+#app-ui section { box-shadow:none !important; }
+#app-ui button { box-shadow:none !important; }
+#app-ui button:focus-visible,#app-ui input:focus-visible,#app-ui select:focus-visible,#app-ui a:focus-visible {
+  outline:2px solid #4b5563 !important; outline-offset:2px;
+}
+#app-ui button[class*="bg-blue-"], #app-ui button[class*="bg-emerald-"],
+#app-ui button[class*="bg-indigo-"] {background:#323a43 !important;color:#fff !important;border-color:#323a43 !important;}
+#app-ui button[class*="bg-blue-"]:hover,#app-ui button[class*="bg-emerald-"]:hover {background:#1f242a !important;}
+#app-ui :is(div,label,span)[class*="bg-blue-"],
+#app-ui :is(div,label,span)[class*="bg-emerald-"],
+#app-ui :is(div,label,span)[class*="bg-indigo-"],
+#app-ui :is(div,label,span)[class*="bg-sky-"],
+#app-ui :is(div,label,span)[class*="bg-cyan-"] {background:#f3f4f6 !important;}
+html.dark #app-ui :is(div,label,span)[class*="bg-blue-"],
+html.dark #app-ui :is(div,label,span)[class*="bg-emerald-"],
+html.dark #app-ui :is(div,label,span)[class*="bg-indigo-"] {background:#24282d !important;}
+#app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-blue-"],
+#app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-emerald-"],
+#app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-indigo-"],
+#app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-sky-"],
+#app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-cyan-"] {color:#434a53 !important;}
+html.dark #app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-blue-"],
+html.dark #app-ui :is(button,span,a,label,h1,h2,h3)[class*="text-emerald-"] {color:#e2e4e7 !important;}
+#app-ui :not([id^="bar_"])[class*="border-blue-"],
+#app-ui :not([id^="bar_"])[class*="border-emerald-"],
+#app-ui :not([id^="bar_"])[class*="border-indigo-"] {border-color:#d5d9dd !important;}
+#app-ui :is(.stats-index,.stats-index *) {border-radius:0 !important;}
+#app-ui .stats-index .stat-value {font-variant-numeric:tabular-nums;}
+.brand-logo {width:58px;height:58px;object-fit:contain;flex-shrink:0;}
+html.dark .brand-logo {filter:invert(1);}
+.qr-frame {padding:5px;background:#fff;border:1px solid #d2d7dc; flex-shrink:0;}
+.qr-frame svg {display:block;max-width:100%;height:auto;}
+.subtle-label {font-size:0.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:#58616b;}
+html.dark .subtle-label {color:#bec5cc;}
+.metadata-field {min-width:0;}
+.metadata-field label {display:block;font-size:.74rem;font-weight:600;margin-bottom:4px;color:#4b5563;}
+html.dark .metadata-field label {color:#d3d7db;}
+.metadata-field :is(input,select) {width:100%;font-size:.79rem;padding:8px 10px;background:#fff;border:1px solid #aeb8c2;min-height:37px;color:#1f2937;}
+html.dark .metadata-field :is(input,select) {background:#121416;color:#f5f5f5;border-color:#606873;}
+.metadata-field select {min-width:0;}
+.neutral-surface {background:#f9fafb;border:1px solid #dce0e4;padding:15px;}
+html.dark .neutral-surface {background:#17191d;border-color:#4b5563;}
+.status-line {font-weight:700;font-size:.77rem;letter-spacing:.02em;}
+.status-caption {font-size:.71rem;color:#677078;line-height:1.55;}
+html.dark .status-caption {color:#abb2bb;}
+.stat-number-input {width:72px;border:1px solid #a9b2ba;background:#fff;padding:6px 7px;font-size:.82rem;text-align:right;}
+html.dark .stat-number-input {background:#121416;color:#fff;border-color:#606873;}
+.stats-index input[type="range"]:disabled {opacity:.35;cursor:not-allowed;}
+.stats-index input[type="range"]::-webkit-slider-thumb {border-radius:50% !important;background:#4b5563;}
+.stats-index input[type="range"]::-moz-range-thumb {border-radius:50% !important;background:#4b5563;}
+.stat-hint {font-size:.69rem;color:#687078;line-height:1.4;}
+.metric-value {font-size:1.4rem;font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums;}
+.metric-label {font-size:.69rem;font-weight:600;color:#58616b;}
+.progress-bar {height:7px;background:#dbe0e5;overflow:hidden;}
+.progress-fill {height:100%;background:#58616b;transition:width .18s ease;}
+.warning-list {list-style:disc;padding-left:20px;font-size:.79rem;line-height:1.7;color:#48515a;}
+html.dark .warning-list {color:#d2d5d8;}
+.cpf-feedback {font-size:10px;color:#5f6771;margin-top:4px;min-height:12px;}
+.target-photo-large {width:96px;height:96px;object-fit:cover;border:1px solid #b7bdc5;}
+.target-photo-empty {width:48px;height:48px;border:1px dashed #b7bdc5;}
+.target-card-with-photo {align-items:flex-start !important;}
+.target-card-with-photo .target-actions {align-self:center;}
+#targets-list {max-height:none !important;overflow:visible !important;}
+
+  /* Imagem do endereco: proporcoes na tela e no relatorio. */
+  .location-photo-size-control {min-width:225px;flex:1;max-width:470px;}
+  .location-photo-size-control input[type="range"] {flex:1;min-width:80px;accent-color:#59616b;cursor:pointer;}
+  .location-photo-size-control output {min-width:52px;text-align:right;font-variant-numeric:tabular-nums;}
+  .location-photo-preview {display:block;max-width:100%;max-height:380px;height:auto;object-fit:contain;object-position:left center;border:1px solid #cbd0d5;background:#fff;}
+  .location-photo-preview[hidden],#btn-remove-location-photo[hidden],#p_location_photo_panel[hidden] {display:none !important;}
+  @media (max-width:520px) {
+    .location-photo-size-control {min-width:0;max-width:100%;width:100%;flex:0 0 100%;}
+    .location-photo-size-control input[type="range"] {min-width:60px;}
+    .location-photo-size-control output {white-space:nowrap;flex-shrink:0;}
+  }
+  @media print {
+    .p-location-photo-box {break-inside:avoid-page;page-break-inside:avoid-page;}
+    .p-location-photo-image {display:block;max-width:100%;max-height:220mm;height:auto;object-fit:contain;margin:0 auto;}
+  }
+
+
+/* Unica excecao ao estilo neutro: o botao de emissao do relatorio. */
+#app-ui #btn-generate-pdf {
+  appearance:none;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-width:226px;
+  min-height:54px;
+  padding:14px 34px !important;
+  border:1px solid rgba(255,255,255,.58) !important;
+  border-radius:999px !important;
+  color:#fff !important;
+  background:linear-gradient(135deg,rgba(18,88,215,.88) 0%,rgba(40,129,239,.78) 53%,rgba(15,97,217,.89) 100%) !important;
+  -webkit-backdrop-filter:blur(16px) saturate(175%);
+  backdrop-filter:blur(16px) saturate(175%);
+  box-shadow:0 12px 28px rgba(25,91,196,.24),inset 0 1px 0 rgba(255,255,255,.44),inset 0 -1px 0 rgba(0,54,136,.21) !important;
+  text-shadow:0 1px 1px rgba(10,46,110,.33);
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+#app-ui #btn-generate-pdf::before {
+  content:"";
+  position:absolute;
+  inset:1px 1px 47%;
+  border-radius:inherit;
+  background:linear-gradient(180deg,rgba(255,255,255,.26),rgba(255,255,255,0));
+  pointer-events:none;
+}
+#app-ui #btn-generate-pdf svg,#app-ui #btn-generate-pdf span {position:relative;z-index:1;}
+#app-ui #btn-generate-pdf:hover {
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,rgba(15,81,208,.92) 0%,rgba(37,130,247,.84) 53%,rgba(11,86,209,.93) 100%) !important;
+  box-shadow:0 16px 35px rgba(25,91,196,.3),inset 0 1px 0 rgba(255,255,255,.5) !important;
+}
+#app-ui #btn-generate-pdf:active {transform:translateY(0);}
+#app-ui #btn-generate-pdf:focus-visible {outline:2px solid #2563eb !important;outline-offset:4px;}
+@media (prefers-reduced-motion:reduce) {
+  #app-ui #btn-generate-pdf {transition:none;}
+  #app-ui #btn-generate-pdf:hover,#app-ui #btn-generate-pdf:active {transform:none;}
+}
+
+#print-sheet {display:none;}
+@page {size:A4 portrait;margin:12mm 12mm 14mm;}
+@media print {
+  html,body {margin:0 !important;padding:0 !important;max-height:none !important;overflow:visible !important;color:#1f2937 !important;background:#fff !important;-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+  #app-ui,#toast-container {display:none !important;}
+  #print-sheet {display:block !important;width:100%;font-family:Inter,Arial,sans-serif;font-size:8.5pt;line-height:1.38;color:#20242a;}
+  .print-doc,.print-intro,.print-targets {width:100%;max-height:none !important;height:auto !important;overflow:visible !important;}
+  .print-heading {display:flex;align-items:center;justify-content:space-between;gap:14px;border-bottom:2px solid #262c31;padding:0 0 9px;margin:0 0 15px;break-inside:avoid;}
+  .print-heading-logo {width:51px;height:51px;object-fit:contain;flex-shrink:0;}
+  .print-heading-title {font-weight:850;letter-spacing:-.02em;font-size:18pt;line-height:1.12;}
+  .print-heading-meta {font-size:7.5pt;color:#47515b;text-align:right;line-height:1.5;min-width:130px;}
+  .p-box {border:1px solid #b8c0c7;padding:10px 11px;margin-bottom:12px;background:#fff;break-inside:avoid-page;page-break-inside:avoid;}
+  .p-box-title {border-bottom:1px solid #d5d9dd;margin:-10px -11px 9px;padding:7px 11px;font-size:9pt;font-weight:800;letter-spacing:.04em;text-transform:uppercase;background:#f3f4f5;}
+  .p-grid {display:grid;gap:10px;}
+  .p-label {display:block;font-size:6.9pt;text-transform:uppercase;font-weight:750;color:#626b75;margin-bottom:2px;letter-spacing:.025em;}
+  .p-val {display:block;font-size:8.7pt;font-weight:580;color:#1f2937;line-height:1.45;overflow-wrap:anywhere;white-space:normal;}
+  .p-divider {border-top:1px solid #d7dce1;margin:10px 0;padding:0;}
+  .p-qr-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+  .p-qr-cell {min-width:0;border:1px solid #d1d6da;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 5px 7px;break-inside:avoid;}
+  .p-qr-cell svg {width:128px !important;height:128px !important;max-width:100%;display:block;}
+  .p-qr-title {font-size:8pt;font-weight:800;text-transform:uppercase;margin:6px 0 2px;}
+  .p-qr-caption {font-size:6.9pt;color:#525c65;max-width:190px;line-height:1.35;}
+  .p-stats-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+  .p-stat {border:1px solid #ccd2d8;padding:9px 8px;min-width:0;}
+  .p-stat-head {display:flex;flex-direction:column;gap:5px;font-weight:800;font-size:7.4pt;}
+  .p-stat-value {font-size:11pt;font-variant-numeric:tabular-nums;}
+  .p-stat-track {width:100%;height:8px;background:#e0e3e6;margin-top:6px;}
+  .p-stat-fill {height:100%;width:0;background:#717b85;}
+  .p-evidence-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;}
+  .p-evidence-item {border:1px solid #d6dadd;padding:8px;min-width:0;overflow-wrap:anywhere;}
+  .p-evidence-item .p-label:not(:first-child){margin-top:6px;}
+  .p-note {font-size:7pt;color:#535d67;margin-top:7px;line-height:1.4;}
+  .p-warning {border:1px solid #ccd1d7;padding:9px 11px;margin-bottom:12px;font-size:7.5pt;break-inside:avoid-page;}
+  .p-section-heading {font-size:11pt;font-weight:800;margin:13px 0 9px;padding-bottom:5px;border-bottom:1px solid #8f9aa4;break-after:avoid-page;page-break-after:avoid;}
+  .p-targets-grid {display:block;font-size:0;line-height:0;}
+  .p-target-card {display:inline-flex;vertical-align:top;width:calc(50% - 5px);min-height:70px;border:1px solid #d0d5da;padding:6px;margin:0 5px 6px 0;align-items:center;gap:9px;break-inside:avoid;page-break-inside:avoid;font-size:8pt;line-height:1.35;overflow:visible;background:#fff;}
+  .p-target-card.with-photo {min-height:122px;}
+  .p-target-card:last-child {margin-bottom:8px;}
+  .p-target-photo {width:108px;height:108px;object-fit:cover;border:1px solid #b6bdc4;flex-shrink:0;}
+  .p-target-placeholder {width:54px;height:54px;border:1px dashed #9da7b0;display:flex;align-items:center;justify-content:center;font-size:8pt;color:#515b65;font-weight:700;flex-shrink:0;}
+  .p-target-details {flex:1;min-width:0;overflow-wrap:anywhere;}
+  .p-target-name {font-size:9pt;font-weight:800;margin-bottom:4px;line-height:1.25;overflow-wrap:anywhere;}
+  .p-target-meta {font-size:7.7pt;margin-top:3px;overflow-wrap:anywhere;}
+  .report-closing {display:block;break-inside:avoid;page-break-inside:avoid;margin-top:70px;}
+  .signature-area {width:250px;margin:24px auto 13px;text-align:center;}
+  .signature-rule {height:1px;background:#2d3239;width:100%;}
+  .signature-name {font-size:8pt;margin-top:5px;font-weight:700;}
+  .print-footer {border-top:1px solid #89939d;padding-top:8px;display:flex;gap:14px;justify-content:space-between;font-size:7.3pt;color:#4d5660;}
+  .print-footer span:last-child {text-align:right;}
+}
+
+  /* Paleta neutra: indicadores numéricos têm as únicas cores de estado. */
+  #app-ui input[type="checkbox"] { accent-color:#535b63!important; }
+  #app-ui :is(span,button,a,label,h1,h2,h3,svg)[class*="text-amber-"] {color:#4b5563!important;}
+  #app-ui :is(span,button,a,label,h1,h2,h3,svg)[class*="text-red-"] {color:#4b5563!important;}
+  #app-ui :is(span,button,a,label,h1,h2,h3,svg)[class*="text-orange-"] {color:#4b5563!important;}
+  #app-ui :is(div,span,button,a,label)[class*="bg-amber-"] {background-color:#eceeef!important;}
+  #app-ui :is(div,span,button,a,label)[class*="bg-red-"] {background-color:#eceeef!important;}
+  /* Uniformiza títulos dos QR Codes, caixas de localização e links. */
+  #app-ui [class*="text-blue-"], #app-ui [class*="text-emerald-"],
+  #app-ui [class*="text-indigo-"], #app-ui [class*="text-sky-"],
+  #app-ui [class*="text-cyan-"] {color:#475569!important;}
+  html.dark #app-ui [class*="text-blue-"], html.dark #app-ui [class*="text-emerald-"],
+  html.dark #app-ui [class*="text-indigo-"], html.dark #app-ui [class*="text-sky-"],
+  html.dark #app-ui [class*="text-cyan-"] {color:#d1d5db!important;}
+  #app-ui .brand-logo { color:#000; }
+  #app-ui .stats-index input[type="range"] {appearance:none;-webkit-appearance:none;height:15px;background:transparent;accent-color:#59616b;}
+  #app-ui .stats-index input[type="range"]::-webkit-slider-runnable-track {height:6px;background:#d3d9df;}
+  #app-ui .stats-index input[type="range"]::-webkit-slider-thumb {appearance:none;-webkit-appearance:none;margin-top:-4px;width:14px;height:14px;border:0;background:#59616b;border-radius:0!important;}
+  #app-ui .stats-index input[type="range"]::-moz-range-track {height:6px;background:#d3d9df;}
+  #app-ui .stats-index input[type="range"]::-moz-range-thumb {width:14px;height:14px;border:0;background:#59616b;border-radius:0!important;}
+  @media (max-width:640px) {
+    #app-ui header > div:last-child {flex-wrap:wrap;gap:8px;}
+    #app-ui .qr-frame svg {width:90px!important;height:90px!important;}
+  }
+  </style>
+</head>
+<body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 antialiased selection:bg-slate-600 selection:text-white">
+
+  <!-- TOAST DE FEEDBACK -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ========================================================================
+       INTERFACE INTERATIVA WEB (LIGHT MODE PADRÃO + TOGGLE DARK MODE)
+       ======================================================================== -->
+  <div id="app-ui" class="max-w-5xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+    
+    <!-- BARRA SUPERIOR -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-slate-200 dark:border-zinc-800">
+      <div class="flex items-center gap-3.5">
+        <img src="./logo.png" width="58" height="58" alt="Logo Levantamento144" class="brand-logo" />
+        <div>
+          <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">Levantamento144</h1>
+          <span class="text-xs font-mono text-slate-500 dark:text-zinc-400">REGISTRO E CONSOLIDAÇÃO • V2.0</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <!-- Botão Toggle Dark / Light Mode -->
+        <button type="button" id="btn-theme-toggle" onclick="toggleTheme()" class="px-3.5 py-2 rounded-lg bg-white hover:bg-slate-100 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-300 dark:border-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-200 shadow-sm transition flex items-center gap-2">
+          <svg id="icon-moon" class="w-4 h-4 text-slate-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+          <svg id="icon-sun" class="w-4 h-4 text-amber-400 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+          <span id="theme-label">Dark Mode</span>
+        </button>
+
+        <button type="button" onclick="exportBackup()" class="px-3.5 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-xs font-semibold text-slate-700 dark:text-zinc-200">Exportar backup</button>
+        <label for="import_backup" class="px-3.5 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 text-xs font-semibold text-slate-700 dark:text-zinc-200 cursor-pointer">Importar backup</label>
+        <input id="import_backup" type="file" accept=".json,application/json" class="hidden" onchange="importBackup(event)" />
+        <button type="button" onclick="resetAll()" class="px-3.5 py-2 rounded-lg bg-white hover:bg-red-50 dark:bg-zinc-900 dark:hover:bg-red-950/50 border border-slate-300 dark:border-zinc-800 hover:border-red-300 dark:hover:border-red-800 text-xs font-semibold text-slate-600 hover:text-red-600 dark:text-zinc-400 dark:hover:text-red-300 shadow-sm transition">
+          Limpar Tudo
+        </button>
+      </div>
+    </header>
+
+    <main class="mt-6 space-y-6">
+      <!-- 01. IDENTIFICAÇÃO DA OPERAÇÃO -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-3.5">01. Identificação da Operação</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Operação / Inquérito / Processo</label>
+            <input type="text" id="op_nome" placeholder="Ex: Op. WinZip" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Unidade / Equipe</label>
+            <input type="text" id="op_unidade" placeholder="Ex: DECC" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Data / Hora Prevista</label>
+            <input type="datetime-local" id="op_datahora" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none" />
+          </div>
+          <div><label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Responsável pela elaboração</label>
+            <input type="text" id="op_responsavel" placeholder="Nome ou matrícula" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white" />
+          </div>
+        </div>
+      </section>
+
+      <!-- 02. ENDEREÇO DO ALVO, HOSPITAL/UPA, DELEGACIA E QR CODES NATIVOS -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+        <div class="mb-4">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">02. Localização do Alvo, Apoio Médico e Policial</h2>
+          
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-12 gap-3.5">
+          <div class="sm:col-span-6">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Logradouro (Rua / Av.)</label>
+            <input type="text" id="end_rua" placeholder="Av. Epitácio Pessoa" oninput="onAddressChange()" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Número</label>
+            <input type="text" id="end_num" placeholder="1200" oninput="onAddressChange()" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+          <div class="sm:col-span-4">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Bairro</label>
+            <input type="text" id="end_bairro" placeholder="Tambaú" oninput="onAddressChange()" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+          <div class="sm:col-span-5">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Cidade / UF</label>
+            <input type="text" id="end_cidade" value="João Pessoa - PB" oninput="onAddressChange()" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+          <div class="sm:col-span-7">
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Ponto de Referência / Coordenadas</label>
+            <input type="text" id="end_ref" placeholder="Portão cinza, esquina com farmácia..." class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+          </div>
+        </div>
+
+
+
+        <!-- Imagem do local: anexo local e largura ajustavel no PDF. -->
+        <div id="location-photo-panel" class="mt-4 neutral-surface">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <label for="location_photo_file" class="text-xs font-bold uppercase tracking-wide">Imagem do Local (Endere&ccedil;o)</label>
+            <button type="button" id="btn-remove-location-photo" onclick="removeLocationPhoto()" class="px-3 py-1.5 border border-slate-300 dark:border-zinc-700 text-xs font-semibold" hidden>Remover imagem</button>
+          </div>
+          <div class="flex flex-col gap-3">
+            <div class="flex flex-wrap items-center gap-3">
+              <label for="location_photo_file" class="px-3.5 py-2 border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-semibold cursor-pointer">Anexar imagem</label>
+              <input id="location_photo_file" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="handleLocationPhotoUpload(event)" aria-label="Anexar imagem do local" />
+              <div class="location-photo-size-control flex items-center gap-2">
+                <label for="location_photo_size" class="text-xs font-semibold whitespace-nowrap">Tamanho no PDF</label>
+                <input id="location_photo_size" type="range" min="80" max="186" step="1" value="170" oninput="updateLocationPhotoSize(this.value)" aria-label="Largura da imagem no PDF" />
+                <output id="location_photo_size_value" for="location_photo_size" class="text-xs font-mono font-bold">170 mm</output>
+              </div>
+            </div>
+            <img id="location_photo_preview" class="location-photo-preview" alt="Imagem anexada do local" hidden />
+          </div>
+        </div>
+
+        <div class="mt-4 neutral-surface" id="geo-panel">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
+            <h3 class="text-xs font-bold uppercase tracking-wide">Validação da localização</h3>
+            <span id="geo-status" class="status-line" aria-live="polite">Endereço ainda não verificado</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
+            <div class="metadata-field"><label for="geo_lat">Latitude</label><input id="geo_lat" type="text" inputmode="decimal" placeholder="Ex.: -7.123456" oninput="onCoordinatesChange()" /></div>
+            <div class="metadata-field"><label for="geo_lon">Longitude</label><input id="geo_lon" type="text" inputmode="decimal" placeholder="Ex.: -34.123456" oninput="onCoordinatesChange()" /></div>
+            <div class="lg:col-span-2 flex items-center gap-3 flex-wrap">
+              <a id="geo-preview-link" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold underline underline-offset-2 text-slate-700 dark:text-zinc-200">Conferir ponto no mapa</a>
+              <span id="geo-origin" class="status-caption">Nenhuma coordenada registrada.</span>
+            </div>
+          </div>
+          <label class="flex items-start gap-2 mt-3 text-xs font-semibold cursor-pointer"><input id="geo_confirm" type="checkbox" onchange="confirmLocation(this.checked)" class="mt-0.5" disabled />
+            Conferi o ponto no mapa e confirmo manualmente sua correspondência com o endereço informado.
+          </label>
+        </div>
+        <!-- Unidades de Apoio (Hospital/UPA + Delegacia) -->
+        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-zinc-800 grid grid-cols-1 lg:grid-cols-2 gap-4">
+          
+          <!-- Hospital / UPA -->
+          <div class="p-3.5 rounded-lg bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase text-emerald-800 dark:text-emerald-400">Hospital / UPA Mais Próximo</span>
+              <a id="hosp_maps_link" href="https://www.google.com/maps/search/hospital+upa" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-emerald-700 dark:text-emerald-300 hover:underline flex items-center gap-1">
+                <span>Rota Maps</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <div class="sm:col-span-8">
+                <input type="text" id="hosp_nome" placeholder="Nome do Hospital ou UPA..." oninput="onManualUnitChange('hosp')" class="w-full rounded-lg bg-white dark:bg-zinc-950 border border-emerald-300 dark:border-emerald-900/70 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" />
+              </div>
+              <div class="sm:col-span-4">
+                <input type="text" id="hosp_dist" placeholder="Distância (km)" class="w-full rounded-lg bg-white dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-emerald-500 focus:outline-none" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Delegacia de Polícia -->
+          <div class="p-3.5 rounded-lg bg-blue-50/60 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-900/50 space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold uppercase text-blue-800 dark:text-blue-400">Delegacia de Polícia Mais Próxima</span>
+              <a id="pol_maps_link" href="https://www.google.com/maps/search/delegacia+de+policia" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-blue-700 dark:text-blue-300 hover:underline flex items-center gap-1">
+                <span>Rota Maps</span>
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+              </a>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+              <div class="sm:col-span-8">
+                <input type="text" id="pol_nome" placeholder="Nome da Delegacia / Central..." oninput="onManualUnitChange('pol')" class="w-full rounded-lg bg-white dark:bg-zinc-950 border border-blue-300 dark:border-blue-900/70 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+              </div>
+              <div class="sm:col-span-4">
+                <input type="text" id="pol_dist" placeholder="Distância (km)" class="w-full rounded-lg bg-white dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="mt-4 flex justify-center">
+          <button type="button" id="btn-locate-support" onclick="findSupportUnits()" class="px-3.5 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white shadow-sm transition flex items-center gap-1.5 w-full sm:w-auto justify-center">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Localizar Hospital/UPA e Delegacia Mais Próximos
+          </button>
+        </div>
+
+        <!-- Painel de QR Codes Nativos (Preview em Tela) -->
+        <div class="mt-4 pt-4 border-t border-slate-200 dark:border-zinc-800">
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800">
+              <div id="ui_qr_alvo" class="qr-frame"></div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-bold uppercase text-slate-700 dark:text-zinc-200">QR Code: Alvo</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800">
+              <div id="ui_qr_hosp" class="qr-frame"></div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-bold uppercase text-emerald-700 dark:text-emerald-400">QR Code: Hospital/UPA</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800">
+              <div id="ui_qr_pol" class="qr-frame"></div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-bold uppercase text-blue-700 dark:text-blue-400">QR Code: Delegacia</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 03. ALVOS (ATÉ 50) + FOTO DO INVESTIGADO + PESQUISA DIRETA -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <div class="flex items-center gap-2.5">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">03. Alvos, Fotografia e Consulta Rápida</h2>
+            <span id="targets-counter" class="px-2.5 py-0.5 rounded-full bg-blue-100 dark:bg-zinc-800 text-xs font-mono font-bold text-blue-700 dark:text-blue-400">1 / 50</span>
+          </div>
+          <button type="button" id="btn-add-target" onclick="addTarget()" class="px-3.5 py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-sm transition">
+            + Adicionar Alvo
+          </button>
+        </div>
+
+        <div id="targets-list" class="space-y-3 max-h-[580px] overflow-y-auto pr-1">
+          <!-- Renderizado via JS -->
+        </div>
+      </section>
+
+      <!-- 04. QUESTIONÁRIO TÁTICO DE LEVANTAMENTO -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-4">04. Questionário Tático de Levantamento</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Bloco A: Imóvel e Barreiras -->
+          <div class="bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800/80 rounded-lg p-4 space-y-2.5">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide border-b border-slate-200 dark:border-zinc-800 pb-1.5">Imóvel e Barreiras</h3>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Tipo de Imóvel</label>
+              <select id="q_imovel" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none">
+                <option value="Não avaliado">Não avaliado</option>
+                <option value="Casa Térrea">Casa Térrea</option>
+                <option value="Sobrado">Sobrado</option>
+                <option value="Apartamento / Condomínio">Apartamento / Condomínio</option>
+                <option value="Kitnet / Vila">Kitnet / Vila</option>
+                <option value="Comércio / Galpão">Comércio / Galpão</option>
+                <option value="Área Rural / Sítio">Área Rural / Sítio</option>
+              </select>
+            </div>
+            <div class="space-y-1.5 pt-1 text-xs text-slate-700 dark:text-zinc-300">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_portao" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-0" />
+                <span>Portão Eletrônico / Grade Reforçada</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_caes" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-0" />
+                <span>Cães de Guarda no Perímetro</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_cameras" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-0" />
+                <span>Câmeras / CFTV Externo</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_fuga" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-0" />
+                <span>Rota de Fuga (Fundos / Laje / Viela)</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_olheiros" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-blue-600 focus:ring-0" />
+                <span>Olheiros / Barricadas na Área</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Bloco B: Risco e Vulneráveis -->
+          <div class="bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800/80 rounded-lg p-4 space-y-2.5">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide border-b border-slate-200 dark:border-zinc-800 pb-1.5">Risco e Vulneráveis</h3>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Histórico Bélico / Resistência</label>
+              <select id="q_armas" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none">
+                <option value="Não avaliado">Não avaliado</option>
+                <option value="Sem registro">Sem registro conhecido</option>
+                <option value="Suspeita de arma curta">Suspeita de arma curta</option>
+                <option value="Registro SINARM/SIGMA">Possui registro SINARM/SIGMA</option>
+                <option value="Fuzil / Armamento pesado">Alto poder bélico / Fuzil</option>
+                <option value="Histórico de confronto">Histórico de confronto policial</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Facção / Organização Criminosa</label>
+              <input type="text" id="q_faccao" placeholder="Não identificado / Nome" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div class="space-y-1.5 pt-1 text-xs text-slate-700 dark:text-zinc-300">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_criancas" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-amber-500 focus:ring-0" />
+                <span>Presença de Crianças</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="checkbox" id="q_idosos" class="rounded bg-white dark:bg-zinc-900 border-slate-300 dark:border-zinc-700 text-amber-500 focus:ring-0" />
+                <span>Idosos / Gestantes / PcD</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Bloco C: Prova de Vida / Habitualidade -->
+          <div class="bg-slate-50 dark:bg-zinc-950/80 border border-slate-200 dark:border-zinc-800/80 rounded-lg p-4 space-y-2.5">
+            <h3 class="text-xs font-bold text-slate-800 dark:text-zinc-200 uppercase tracking-wide border-b border-slate-200 dark:border-zinc-800 pb-1.5">Habitualidade / Alvo</h3>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Prova de Vida no Local</label>
+              <select id="q_provavida" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none">
+                <option value="Não avaliado">Não avaliado</option>
+                <option value="Confirmada visualmente (< 48h)">Confirmada visualmente (&lt; 48h)</option>
+                <option value="Confirmada visualmente (última semana)">Confirmada visualmente (7 dias)</option>
+                <option value="Confirmada via fontes/veículo">Confirmada via fontes / veículo</option>
+                <option value="Apenas base cadastral">Apenas base cadastral</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Janela de Horário Ideal</label>
+              <input type="text" id="q_janela" placeholder="Ex: 05h00 às 06h30 (Pernoite)" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-600 dark:text-zinc-400 mb-1">Veículos / Placas Identificadas</label>
+              <input type="text" id="q_veiculos" placeholder="Ex: Corolla Prata ABC-1D23" class="w-full rounded-lg bg-white dark:bg-zinc-900 border border-slate-300 dark:border-zinc-800 px-2.5 py-1.5 text-xs text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 05. ÍNDICES SEM VALORES PRESUMIDOS -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 p-5 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-3">05. Índices Estatísticos do Levantamento</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="stats-index neutral-surface">
+            <div class="flex items-center justify-between gap-2 mb-2"><label for="stat_risco" class="font-bold text-sm">Risco Operacional</label><span id="val_risco" class="stat-value font-mono font-extrabold text-sm">50%</span></div>
+            <input type="range" id="stat_risco" min="0" max="100" value="50" step="1" oninput="onStatSlider('risco')" class="w-full mb-3" />
+            <div class="w-full h-2 bg-slate-200 dark:bg-zinc-800 overflow-hidden"><div id="bar_risco" class="h-full" style="width:50%;background:#717b85"></div></div>
+          </div>
+          <div class="stats-index neutral-surface">
+            <div class="flex items-center justify-between gap-2 mb-2"><label for="stat_endereco" class="font-bold text-sm">Certeza do Endereço</label><span id="val_endereco" class="stat-value font-mono font-extrabold text-sm">50%</span></div>
+            <input type="range" id="stat_endereco" min="0" max="100" value="50" step="1" oninput="onStatSlider('endereco')" class="w-full mb-3" />
+            <div class="w-full h-2 bg-slate-200 dark:bg-zinc-800 overflow-hidden"><div id="bar_endereco" class="h-full" style="width:50%;background:#717b85"></div></div>
+          </div>
+          <div class="stats-index neutral-surface">
+            <div class="flex items-center justify-between gap-2 mb-2"><label for="stat_presenca" class="font-bold text-sm">Certeza da Presença</label><span id="val_presenca" class="stat-value font-mono font-extrabold text-sm">50%</span></div>
+            <input type="range" id="stat_presenca" min="0" max="100" value="50" step="1" oninput="onStatSlider('presenca')" class="w-full mb-3" />
+            <div class="w-full h-2 bg-slate-200 dark:bg-zinc-800 overflow-hidden"><div id="bar_presenca" class="h-full" style="width:50%;background:#717b85"></div></div>
+          </div>
+        </div>
+      </section>
+      <!-- 06. ORIGEM, DATA, CLASSIFICAÇÃO -->
+      <section class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 p-5 shadow-sm">
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400 mb-3">06. Origem, data e classificação da informação</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div class="neutral-surface space-y-3">
+            <h3 class="font-bold text-sm">Endereço</h3>
+            <div class="metadata-field"><label for="ev_endereco_status">Confiabilidade</label><select id="ev_endereco_status" onchange="onEvidenceStatusChange('endereco')"><option value="nao_avaliado">Não avaliado</option><option value="nao_verificado">Não verificado</option><option value="hipotese">Hipótese</option><option value="confirmado">Confirmado (ponto conferido)</option></select></div>
+            <div class="metadata-field"><label for="ev_endereco_fonte">Origem / fonte</label><input id="ev_endereco_fonte" type="text" placeholder="Ex.: visita, documento, mapa" /></div>
+            <div class="metadata-field"><label for="ev_endereco_data">Data da informação</label><input id="ev_endereco_data" type="date" /></div>
+          </div>
+          <div class="neutral-surface space-y-3">
+            <h3 class="font-bold text-sm">Presença do alvo</h3>
+            <div class="metadata-field"><label for="ev_presenca_status">Confiabilidade</label><select id="ev_presenca_status"><option value="nao_avaliado">Não avaliado</option><option value="nao_verificado">Não verificado</option><option value="hipotese">Hipótese</option><option value="confirmado">Confirmado</option></select></div>
+            <div class="metadata-field"><label for="ev_presenca_fonte">Origem / fonte</label><input id="ev_presenca_fonte" type="text" placeholder="Identificação da fonte" /></div>
+            <div class="metadata-field"><label for="ev_presenca_data">Data da informação</label><input id="ev_presenca_data" type="date" /></div>
+          </div>
+          <div class="neutral-surface space-y-3">
+            <h3 class="font-bold text-sm">Avaliação de risco</h3>
+            <div class="metadata-field"><label for="ev_risco_status">Confiabilidade</label><select id="ev_risco_status"><option value="nao_avaliado">Não avaliado</option><option value="nao_verificado">Não verificado</option><option value="hipotese">Hipótese</option><option value="confirmado">Confirmado</option></select></div>
+            <div class="metadata-field"><label for="ev_risco_fonte">Origem / fonte</label><input id="ev_risco_fonte" type="text" placeholder="Identificação da fonte" /></div>
+            <div class="metadata-field"><label for="ev_risco_data">Data da informação</label><input id="ev_risco_data" type="date" /></div>
+          </div>
+        </div>
+      </section>
+      <!-- Acao principal: gerar o relatorio PDF (impressao do navegador). -->
+      <div class="pt-2 pb-10 flex justify-center">
+        <button id="btn-generate-pdf" type="button" onclick="prepareAndPrint()" class="w-full sm:w-auto px-8 py-4 text-sm sm:text-base font-extrabold transition flex items-center justify-center gap-2.5">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/></svg>
+          <span>Gerar Relatório</span>
+        </button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Documento A4 com paginação automática, sem limite de páginas. -->
+  <div id="print-sheet">
+    <article class="print-doc">
+      <div class="print-intro">
+        <header class="print-heading">
+          <div style="display:flex;align-items:center;gap:12px;min-width:0">
+            <img src="./logo.png" width="51" height="51" alt="Logo Levantamento144" class="print-heading-logo" />
+            <div class="print-heading-title">LEVANTAMENTO144</div>
+          </div>
+          <div class="print-heading-meta"><strong>EMISSÃO</strong><div id="p_emissao">—</div><div>VERSÃO 2.0</div></div>
+        </header>
+        <section class="p-box">
+          <div class="p-box-title">1. Dados da operação</div>
+          <div class="p-grid" style="grid-template-columns:1.6fr 1.1fr 1.2fr 1.2fr">
+            <div><span class="p-label">Operação / inquérito</span><span class="p-val" id="p_op_nome">—</span></div>
+            <div><span class="p-label">Unidade / equipe</span><span class="p-val" id="p_op_unidade">—</span></div>
+            <div><span class="p-label">Data / hora prevista</span><span class="p-val" id="p_op_datahora">—</span></div>
+            <div><span class="p-label">Responsável</span><span class="p-val" id="p_op_responsavel">—</span></div>
+          </div>
+        </section>
+        <section class="p-box">
+          <div class="p-box-title">2. Localização geográfica e unidades de apoio</div>
+          <div class="p-grid" style="grid-template-columns:2fr 1fr 1.15fr;">
+            <div><span class="p-label">Endereço informado</span><span class="p-val" id="p_endereco">—</span></div>
+            <div><span class="p-label">Ponto de referência</span><span class="p-val" id="p_referencia">—</span></div>
+            <div><span class="p-label">Validação de localização</span><span class="p-val" id="p_geo_status">Endereço ainda não verificado</span><span class="p-note" id="p_geo_coords">—</span></div>
+          </div>
+          <div class="p-divider"></div>
+          <div class="p-grid" style="grid-template-columns:1fr 1fr;">
+            <div><span class="p-label">Hospital / UPA informado</span><span class="p-val" id="p_hospital">—</span><span class="p-note" id="p_hosp_dist"></span></div>
+            <div><span class="p-label">Delegacia informada</span><span class="p-val" id="p_delegacia">—</span><span class="p-note" id="p_pol_dist"></span></div>
+          </div>
+          <div class="p-divider"></div>
+          <div class="p-qr-grid">
+            <div class="p-qr-cell"><div id="p_qr_alvo"></div><div class="p-qr-title">QR Alvo</div></div>
+            <div class="p-qr-cell"><div id="p_qr_hosp"></div><div class="p-qr-title">QR Hospital/UPA</div></div>
+            <div class="p-qr-cell"><div id="p_qr_pol"></div><div class="p-qr-title">QR Delegacia</div></div>
+          </div>
+        </section>
+
+        <section class="p-box p-location-photo-box" id="p_location_photo_panel" hidden>
+          <div class="p-box-title">Imagem do Local (Endere&ccedil;o)</div>
+          <img id="p_location_photo_image" class="p-location-photo-image" alt="Imagem do local informado" />
+        </section>
+        <section class="p-box">
+          <div class="p-box-title">3. Índices estatísticos do levantamento</div>
+          <div class="p-stats-grid">
+            <div class="p-stat"><div class="p-stat-head"><span>RISCO OPERACIONAL</span><span class="p-stat-value" id="p_stat_risco_txt">Não avaliado</span></div><div class="p-stat-track"><div id="p_stat_risco_bar" class="p-stat-fill"></div></div></div>
+            <div class="p-stat"><div class="p-stat-head"><span>CERTEZA DO ENDEREÇO</span><span class="p-stat-value" id="p_stat_end_txt">Não avaliado</span></div><div class="p-stat-track"><div id="p_stat_end_bar" class="p-stat-fill"></div></div></div>
+            <div class="p-stat"><div class="p-stat-head"><span>CERTEZA DA PRESENÇA</span><span class="p-stat-value" id="p_stat_pres_txt">Não avaliado</span></div><div class="p-stat-track"><div id="p_stat_pres_bar" class="p-stat-fill"></div></div></div>
+          </div>
+        </section>
+        <section class="p-box">
+          <div class="p-box-title">4. Questionário consolidado</div>
+          <div class="p-grid" style="grid-template-columns:1fr 1fr;gap:11px 18px;">
+            <div><span class="p-label">Tipo de imóvel</span><span id="p_q_imovel" class="p-val">—</span></div>
+            <div><span class="p-label">Barreiras e contravigilância</span><span id="p_q_barreiras" class="p-val">—</span></div>
+            <div><span class="p-label">Histórico bélico / resistência</span><span id="p_q_armas" class="p-val">—</span></div>
+            <div><span class="p-label">Facção / organização</span><span id="p_q_faccao" class="p-val">—</span></div>
+            <div><span class="p-label">Terceiros vulneráveis</span><span id="p_q_vulneraveis" class="p-val">—</span></div>
+            <div><span class="p-label">Prova de vida / habitualidade</span><span id="p_q_provavida" class="p-val">—</span></div>
+            <div><span class="p-label">Janela de horário informada</span><span id="p_q_janela" class="p-val">—</span></div>
+            <div><span class="p-label">Veículos / placas identificados</span><span id="p_q_veiculos" class="p-val">—</span></div>
+          </div>
+        </section>
+        <section class="p-box">
+          <div class="p-box-title">5. Rastreabilidade e classificação das informações</div>
+          <div class="p-evidence-grid">
+            <div class="p-evidence-item"><span class="p-label">Endereço</span><span class="p-val" id="p_ev_endereco_status">Não avaliado</span><span class="p-label">Fonte</span><span class="p-val" id="p_ev_endereco_fonte">—</span><span class="p-label">Data</span><span class="p-val" id="p_ev_endereco_data">—</span></div>
+            <div class="p-evidence-item"><span class="p-label">Presença</span><span class="p-val" id="p_ev_presenca_status">Não avaliado</span><span class="p-label">Fonte</span><span class="p-val" id="p_ev_presenca_fonte">—</span><span class="p-label">Data</span><span class="p-val" id="p_ev_presenca_data">—</span></div>
+            <div class="p-evidence-item"><span class="p-label">Avaliação de risco</span><span class="p-val" id="p_ev_risco_status">Não avaliado</span><span class="p-label">Fonte</span><span class="p-val" id="p_ev_risco_fonte">—</span><span class="p-label">Data</span><span class="p-val" id="p_ev_risco_data">—</span></div>
+          </div>
+        </section>
+      </div>
+      <section class="print-targets" aria-label="Relação de alvos">
+        <div class="p-section-heading">6. Relação de alvos identificados (<span id="p_total_targets">0</span>)</div>
+        <div id="p_targets_container" class="p-targets-grid"></div>
+      </section>
+      <div class="report-closing">
+        <div class="signature-area"><div class="signature-rule"></div><div class="signature-name">Assinatura</div></div>
+        <footer class="print-footer"><span>DOCUMENTO RESTRITO • CONFERIR ORIGEM E DATA DOS DADOS</span><span>LEVANTAMENTO144 • <span id="p_footer_emissao"></span></span></footer>
+      </div>
+    </article>
+  </div>
+
+  <script>
+'use strict';
+const MAX_TARGETS = 50;
+const STORAGE_KEY = 'levantamento144_state_v3';
+const LEGACY_STORAGE_KEY = 'levantamento144_state_v2';
+const THEME_KEY = 'levantamento144_theme';
+const DB_NAME = 'levantamento144_photos_v2';
+const DB_STORE = 'photos';
+
+const LOCATION_PHOTO_KEY = '__levantamento144_location_photo__';
+const LOCATION_PHOTO_DEFAULT_WIDTH = 170;
+let locationPhoto = '';
+let locationPhotoWidth = LOCATION_PHOTO_DEFAULT_WIDTH;
+function validLocationPhotoWidth(input) {
+  const number = Number(input);
+  return Number.isFinite(number) && number >= 80 && number <= 186 ? Math.round(number) : LOCATION_PHOTO_DEFAULT_WIDTH;
+}
+function renderLocationPhotoUI() {
+  const preview = $('location_photo_preview');
+  preview.hidden = !locationPhoto;
+  if(locationPhoto && preview.getAttribute('src') !== locationPhoto) preview.src = locationPhoto;
+  else preview.removeAttribute('src');
+  $('btn-remove-location-photo').hidden = !locationPhoto;
+  $('location_photo_size').value = String(locationPhotoWidth);
+  text('location_photo_size_value', locationPhotoWidth + ' mm');
+  preview.style.width = String(Math.round(locationPhotoWidth * 3.2)) + 'px';
+}
+function updateLocationPhotoSize(input) {
+  locationPhotoWidth = validLocationPhotoWidth(input);
+  renderLocationPhotoUI();
+  saveState();
+}
+async function handleLocationPhotoUpload(event) {
+  const file = event.target.files?.[0];
+  if(!file) return;
+  try {
+    const image = await processImage(file, 1800);
+    if(photoBackend === 'ready') await photoStore('put', LOCATION_PHOTO_KEY, image);
+    locationPhoto = image;
+    renderLocationPhotoUI();
+    saveState();
+    showToast('Imagem do local anexada.');
+  } catch(e) {showToast('Falha na imagem do local: ' + (e.message || e), 'error');}
+  finally {event.target.value = '';}
+}
+async function removeLocationPhoto() {
+  if(photoBackend === 'ready') {
+    try {await photoStore('delete', LOCATION_PHOTO_KEY);}
+    catch(e) {showToast('Falha ao remover imagem armazenada.', 'error');return;}
+  }
+  locationPhoto = '';
+  renderLocationPhotoUI();
+  saveState();
+}
+function prepareLocationPhotoPrint() {
+  const panel = $('p_location_photo_panel');
+  const image = $('p_location_photo_image');
+  panel.hidden = !locationPhoto;
+  if(locationPhoto) {
+    image.src = locationPhoto;
+    image.style.width = locationPhotoWidth + 'mm';
+  } else image.removeAttribute('src');
+}
+
+const STAT_KEYS = ['risco', 'endereco', 'presenca'];
+const EVIDENCE_KEYS = ['endereco', 'presenca', 'risco'];
+const STATUS_LABELS = {
+  nao_avaliado: 'Não avaliado',
+  nao_verificado: 'Não verificado',
+  hipotese: 'Hipótese',
+  confirmado: 'Confirmado'
+};
+const FIELD_IDS = [
+  'op_nome', 'op_unidade', 'op_datahora', 'op_responsavel',
+  'end_rua', 'end_num', 'end_bairro', 'end_cidade', 'end_ref',
+  'geo_lat', 'geo_lon',
+  'hosp_nome', 'hosp_dist', 'pol_nome', 'pol_dist',
+  'q_imovel', 'q_armas', 'q_faccao', 'q_provavida', 'q_janela', 'q_veiculos',
+  'stat_risco', 'stat_endereco', 'stat_presenca',
+  'ev_endereco_status', 'ev_endereco_fonte', 'ev_endereco_data',
+  'ev_presenca_status', 'ev_presenca_fonte', 'ev_presenca_data',
+  'ev_risco_status', 'ev_risco_fonte', 'ev_risco_data'
+];
+const CHECKBOX_IDS = ['q_portao', 'q_caes', 'q_cameras', 'q_fuga', 'q_olheiros', 'q_criancas', 'q_idosos'];
+function createId() {
+  if (globalThis.crypto?.randomUUID) return crypto.randomUUID();
+  const buffer = new Uint8Array(16);
+  if (globalThis.crypto?.getRandomValues) crypto.getRandomValues(buffer);
+  else for (let i = 0; i < buffer.length; i++) buffer[i] = Math.floor(Math.random() * 256);
+  return Array.from(buffer, b => b.toString(16).padStart(2, '0')).join('');
+}
+function newTarget() {
+  return { id: createId(), nome: '', vulgo: '', cpf: '', photo: '' };
+}
+let targets = [newTarget()];
+let routeUrls = {
+  alvo: 'https://www.google.com/maps',
+  hosp: 'https://www.google.com/maps/search/hospital+upa',
+  pol: 'https://www.google.com/maps/search/delegacia+de+policia'
+};
+let geoState = { confirmed: false, fingerprint: '', origin: '', fetchedAt: '' };
+let photoBackend = 'pending';
+let photoDbPromise = null;
+let initializing = false;
+let storageWarned = false;
+let lastQrValues = {};
+const $ = id => document.getElementById(id);
+const value = id => ($(id)?.value || '').trim();
+const text = (id, val) => { if ($(id)) $(id).textContent = String(val); };
+const labelIfBlank = (str, fallback = 'Não informado') => str || fallback;
+const safeGetItem = key => { try { return localStorage.getItem(key); } catch (_) { return null; } };
+const safeRemoveItem = key => { try { localStorage.removeItem(key); } catch (_) {} };
+function escapeHtml(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+function safePhotoData(s) {
+  return (typeof s === 'string' && /^data:image\/(?:jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(s)) ? s : '';
+}
+function sanitizeMapsUrl(s, fallback) {
+  if (typeof s !== 'string') return fallback;
+  try { const u = new URL(s); return u.protocol === 'https:' && (u.hostname === 'www.google.com' || u.hostname === 'maps.google.com') && u.pathname.startsWith('/maps') ? u.href : fallback; }
+  catch (_) { return fallback; }
+}
+function showToast(message, kind = 'info') {
+  const parent = $('toast-container');
+  if (!parent) return;
+  const item = document.createElement('div');
+  item.className = 'px-4 py-3 border bg-slate-900 border-slate-700 text-white text-xs font-semibold shadow-md max-w-sm';
+  item.setAttribute('role', kind === 'error' ? 'alert' : 'status');
+  item.textContent = message;
+  parent.appendChild(item);
+  window.setTimeout(() => item.remove(), 4300);
+}
+function applyTheme(theme) {
+  document.documentElement.classList.toggle('dark', theme === 'dark');
+  $('icon-moon').classList.toggle('hidden', theme === 'dark');
+  $('icon-sun').classList.toggle('hidden', theme !== 'dark');
+  text('theme-label', theme === 'dark' ? 'Modo claro' : 'Modo escuro');
+}
+function toggleTheme() {
+  const next = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+  try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
+  applyTheme(next);
+}
+function formatCPF(raw) {
+  return String(raw || '').replace(/\D/g, '').slice(0, 11)
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d)/, '$1.$2')
+    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+}
+function validCPF(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) return false;
+  for (let length = 9; length <= 10; length++) {
+    let sum = 0;
+    for (let i = 0; i < length; i++) sum += Number(digits[i]) * (length + 1 - i);
+    const check = (sum * 10) % 11;
+    if (Number(digits[length]) !== (check === 10 ? 0 : check)) return false;
+  }
+  return true;
+}
+function cpfStatus(raw) {
+  if (!String(raw || '').trim()) return 'CPF não informado';
+  return validCPF(raw) ? 'CPF válido' : 'CPF inválido — confira os 11 dígitos';
+}
+function searchBaseForTarget(id, url, baseName) {
+  // Busca o CPF atual no estado, não a cópia capturada quando o botão foi desenhado.
+  const target = targets.find(t => t.id === id);
+  const cpf = target ? target.cpf : '';
+  const digits = cpf.replace(/\D/g, '');
+  if (digits && !validCPF(cpf)) showToast('CPF inválido. Confira os dados antes da consulta.', 'warn');
+  if (digits) {
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(digits).then(() => showToast('CPF atual copiado. Abrindo ' + baseName + '.')).catch(() => {});
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = digits;document.body.appendChild(textarea);textarea.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      textarea.remove();
+      showToast('Abrindo ' + baseName + '.');
+    }
+  } else showToast('CPF não informado. Abrindo ' + baseName + '.');
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+function renderTargets() {
+  text('targets-counter', `${targets.length} / ${MAX_TARGETS}`);
+  $('btn-add-target').disabled = targets.length >= MAX_TARGETS;
+  $('btn-add-target').classList.toggle('opacity-50', targets.length >= MAX_TARGETS);
+  $('targets-list').innerHTML = targets.map((t, idx) => {
+    const id = escapeHtml(t.id);
+    const picture = safePhotoData(t.photo);
+    return `<div class="border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 p-3.5 flex flex-col xl:flex-row xl:items-center gap-3 ${picture ? 'target-card-with-photo' : ''}">
+      <div class="flex items-start gap-2.5 shrink-0">
+        <span class="font-mono text-xs font-bold text-slate-500 w-7">#${String(idx + 1).padStart(2, '0')}</span>
+        <div class="relative">
+        ${picture ? `<img class="target-photo-large" src="${picture}" alt="Fotografia de identificação do alvo ${idx + 1}" />
+          <button type="button" onclick="removeTargetPhoto('${id}')" title="Remover foto" aria-label="Remover fotografia" class="absolute top-0 right-0 px-2 py-1 bg-slate-900 text-white text-xs font-bold">×</button>` :
+          `<label title="Anexar fotografia" class="target-photo-empty cursor-pointer bg-white dark:bg-zinc-900 flex flex-col items-center justify-center text-slate-500 text-[9px] font-bold">FOTO
+           <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handlePhotoUpload(event,'${id}')" aria-label="Anexar fotografia" /></label>`}
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 flex-1 min-w-0">
+        <div class="sm:col-span-5"><label for="target_nome_${id}" class="sr-only">Nome do investigado</label><input id="target_nome_${id}" type="text" placeholder="Nome do investigado" value="${escapeHtml(t.nome)}" oninput="updateTarget('${id}','nome',this.value)" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs" /></div>
+        <div class="sm:col-span-3"><label for="target_vulgo_${id}" class="sr-only">Vulgo</label><input id="target_vulgo_${id}" type="text" placeholder="Vulgo" value="${escapeHtml(t.vulgo)}" oninput="updateTarget('${id}','vulgo',this.value)" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs" /></div>
+        <div class="sm:col-span-4"><label for="target_cpf_${id}" class="sr-only">CPF</label><input id="target_cpf_${id}" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" value="${escapeHtml(t.cpf)}" oninput="handleCPFInput(this,'${id}')" aria-describedby="cpf_msg_${id}" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs font-mono" />
+          <div id="cpf_msg_${id}" class="cpf-feedback">${cpfStatus(t.cpf)}</div></div>
+      </div>
+      <div class="target-actions flex flex-wrap items-center gap-1.5 shrink-0">
+        <button type="button" onclick="searchBaseForTarget('${id}','https://portalbnmp.cnj.jus.br/#/pesquisa-peca','BNMP')" class="px-2 py-2 border border-slate-300 dark:border-zinc-700 text-xs font-semibold">BNMP</button>
+        <button type="button" onclick="searchBaseForTarget('${id}','https://esaj.tjpb.jus.br/cpopg/open.do','TJPB e-SAJ')" class="px-2 py-2 border border-slate-300 dark:border-zinc-700 text-xs font-semibold">TJPB e-SAJ</button>
+        <button type="button" onclick="searchBaseForTarget('${id}','https://pje.tjpb.jus.br/pje/ConsultaPublica/listView.seam','TJPB PJe')" class="px-2 py-2 border border-slate-300 dark:border-zinc-700 text-xs font-semibold">TJPB PJe</button>
+        <button type="button" onclick="searchBaseForTarget('${id}','https://servicos.receita.fazenda.gov.br/Servicos/CPF/ConsultaSituacao/ConsultaPublica.asp','Receita Federal')" class="px-2 py-2 border border-slate-300 dark:border-zinc-700 text-xs font-semibold">Receita</button>
+        ${targets.length > 1 ? `<button type="button" onclick="removeTarget('${id}')" title="Excluir alvo" aria-label="Excluir alvo" class="px-2 py-2 border border-slate-300 dark:border-zinc-700 text-xs font-bold">✕</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+  updateDashboard();
+}
+function updateTarget(id, field, v) {
+  const t = targets.find(x => x.id === id);
+  if (!t || !['nome','vulgo','cpf','photo'].includes(field)) return;
+  t[field] = v;
+  saveState();
+  updateDashboard();
+}
+function handleCPFInput(input, id) {
+  const next = formatCPF(input.value);
+  input.value = next;
+  updateTarget(id,'cpf',next);
+  text('cpf_msg_' + id, cpfStatus(next));
+}
+function addTarget() {
+  if (targets.length >= MAX_TARGETS) {showToast('Limite de 50 alvos atingido.','warn');return;}
+  targets.push(newTarget());renderTargets();saveState();
+}
+async function removeTarget(id) {
+  if (targets.length <= 1) return;
+  targets = targets.filter(t => t.id !== id);
+  renderTargets();saveState();
+  if (photoBackend === 'ready') try {await photoStore('delete', id);} catch (_) {}
+}
+function processImage(file,maxDim=500) {
+  return new Promise((resolve,reject) => {
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type) || file.size > 20 * 1024 * 1024) {
+      reject(new Error('Selecione JPG, PNG ou WebP de até 20 MB.'));return;
+    }
+    const fr = new FileReader();
+    fr.onerror = () => reject(new Error('Não foi possível ler a foto.'));
+    fr.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('Imagem não reconhecida.'));
+      img.onload = () => {
+        try {
+          const MAX_DIM = maxDim;
+          const scale = Math.min(1, MAX_DIM / Math.max(img.width,img.height));
+          const w = Math.max(1,Math.round(img.width*scale)), h = Math.max(1,Math.round(img.height*scale));
+          const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+          const ctx=canvas.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,w,h);
+          ctx.imageSmoothingEnabled = true;ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img,0,0,w,h);
+          resolve(canvas.toDataURL('image/jpeg',.83));
+        } catch (e) {reject(e);}
+      };
+      img.src=fr.result;
+    };
+    fr.readAsDataURL(file);
+  });
+}
+async function handlePhotoUpload(event,id) {
+  const file=event.target.files?.[0];if(!file)return;
+  try {
+    const picture=await processImage(file);
+    if (!targets.some(t=>t.id===id)) return;
+    if (photoBackend==='ready') await photoStore('put',id,picture);
+    updateTarget(id,'photo',picture);
+    renderTargets();showToast('Fotografia anexada.');
+  } catch (e) {showToast('Falha na fotografia: '+(e.message||e),'error');}
+  finally {event.target.value='';}
+}
+async function removeTargetPhoto(id) {
+  if (photoBackend==='ready') try {await photoStore('delete',id);} catch (_) {showToast('Falha ao apagar fotografia armazenada.','error');}
+  updateTarget(id,'photo','');renderTargets();
+}
+function openPhotoDB() {
+  if (!('indexedDB' in window)) return Promise.reject(new Error('IndexedDB indisponível'));
+  if (photoDbPromise) return photoDbPromise;
+  photoDbPromise = new Promise((resolve,reject) => {
+    const request = indexedDB.open(DB_NAME,1);
+    request.onupgradeneeded = () => {if(!request.result.objectStoreNames.contains(DB_STORE))request.result.createObjectStore(DB_STORE);};
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error || new Error('Armazenamento bloqueado'));
+    request.onblocked = () => reject(new Error('Banco local bloqueado'));
+  });
+  return photoDbPromise;
+}
+async function photoStore(action,id,photo) {
+  const db=await openPhotoDB();
+  return new Promise((resolve,reject) => {
+    const tx=db.transaction(DB_STORE, action==='get' ? 'readonly':'readwrite');
+    const store=tx.objectStore(DB_STORE);
+    let request;
+    if(action==='get')request=store.get(id);
+    else if(action==='put')request=store.put(photo,id);
+    else if(action==='delete')request=store.delete(id);
+    else if(action==='clear')request=store.clear();
+    tx.oncomplete = () => resolve(request?.result);
+    tx.onerror = () => reject(tx.error || request?.error || new Error('Banco local indisponível'));
+    tx.onabort = () => reject(tx.error || new Error('Transação interrompida'));
+  });
+}
+function getAddressText() {
+  const street=value('end_rua'), number=value('end_num');
+  return [street ? `${street}${number ? ', '+number : ''}`:'',value('end_bairro'),value('end_cidade')].filter(Boolean).join(', ');
+}
+function hasAddress() {return !!value('end_rua');}
+function currentCoords() {
+  const latText=value('geo_lat').replace(',','.'),lonText=value('geo_lon').replace(',','.');
+  if(!latText || !lonText || !/^-?\d+(?:\.\d+)?$/.test(latText) || !/^-?\d+(?:\.\d+)?$/.test(lonText))return null;
+  const lat=Number(latText),lon=Number(lonText);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
+  return {lat,lon};
+}
+function locationConfirmed() {
+  return !!(geoState.confirmed && geoState.fingerprint===getAddressText() && hasAddress() && currentCoords() && value('ev_endereco_status')==='confirmado');
+}
+function renderGeoUI() {
+  const coords=currentCoords();
+  const confirmed=locationConfirmed();
+  text('geo-status',confirmed ? 'Localização confirmada' : (coords ? 'Coordenadas sugeridas — não confirmadas' : 'Endereço ainda não verificado'));
+  text('geo-origin', coords ? (geoState.origin || 'Coordenadas inseridas manualmente') : 'Nenhuma coordenada registrada.');
+  $('geo_confirm').disabled=!(coords && hasAddress());
+  $('geo_confirm').checked=confirmed;
+  const link=$('geo-preview-link');
+  link.href=coords ? `https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`
+    : (hasAddress()?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getAddressText())}`:'https://www.google.com/maps');
+  link.textContent=coords ? 'Conferir coordenadas no mapa' : 'Consultar endereço no mapa';
+}
+function onAddressChange() {
+  if (geoState.fingerprint && geoState.fingerprint !== getAddressText()) {
+    geoState = { confirmed:false, fingerprint:'', origin:'', fetchedAt:'' };
+    $('geo_lat').value='';$('geo_lon').value='';
+    // Distâncias derivadas de outro endereço não podem continuar aparentando precisão.
+    for (const id of ['hosp_dist','pol_dist']) {
+      if (value(id).includes('(linha reta)')) $(id).value = '';
+    }
+  }
+  if(value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
+  // Rotas e distâncias calculadas para endereço antigo não são mais consideradas atuais.
+  onManualUnitChange('hosp', false);
+  onManualUnitChange('pol', false);
+  refreshAllQRCodes();renderGeoUI();saveState();updateDashboard();
+}
+function onCoordinatesChange() {
+  geoState.confirmed=false;
+  geoState.fingerprint=getAddressText();
+  geoState.origin='Coordenadas informadas manualmente';
+  geoState.fetchedAt='';
+  if(value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
+  refreshAllQRCodes();renderGeoUI();saveState();updateDashboard();
+}
+function confirmLocation(checked) {
+  if (checked && !(hasAddress() && currentCoords())) {
+    $('geo_confirm').checked=false;
+    showToast('Informe o logradouro e coordenadas válidas antes de confirmar.','warn');return;
+  }
+  geoState.confirmed=!!checked;
+  geoState.fingerprint=getAddressText();
+  $('ev_endereco_status').value=checked?'confirmado':'nao_verificado';
+  renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
+  if(checked)showToast('Localização confirmada manualmente. Registre fonte e data.');
+}
+function onEvidenceStatusChange(key) {
+  if(key==='endereco') {
+    if(value('ev_endereco_status')==='confirmado' && !(geoState.confirmed && geoState.fingerprint===getAddressText() && currentCoords())) {
+      $('ev_endereco_status').value='nao_verificado';
+      showToast('Endereço confirmado exige coordenadas e conferência manual.','warn');
+    }
+    if(value('ev_endereco_status')!=='confirmado')geoState.confirmed=false;
+  }
+  renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
+}
+function buildTargetMapUrl() {
+  const coords=currentCoords();
+  if(locationConfirmed() && coords)return `https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`;
+  if(hasAddress())return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getAddressText())}`;
+  return 'https://www.google.com/maps';
+}
+function renderNativeQR(elementId,url,size) {
+  const c=$(elementId);if(!c)return;
+  c.replaceChildren();
+  try {
+    if(!window.LocalQR)throw new Error('Gerador local de QR não carregado');
+    const bits=window.LocalQR.generate(url,'M');
+    const n=bits.length,pad=4,dim=n+2*pad;
+    const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+    svg.setAttribute('viewBox',`0 0 ${dim} ${dim}`);svg.setAttribute('width',String(size));svg.setAttribute('height',String(size));
+    svg.setAttribute('role','img');svg.setAttribute('aria-label','QR Code');
+    svg.setAttribute('shape-rendering','crispEdges');
+    const bg=document.createElementNS('http://www.w3.org/2000/svg','rect');
+    bg.setAttribute('width',String(dim));bg.setAttribute('height',String(dim));bg.setAttribute('fill','#fff');
+    svg.append(bg);
+    const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+    let commands=[];
+    for(let y=0;y<n;y++)for(let x=0;x<n;x++)if(bits[y][x]) commands.push(`M${x+pad} ${y+pad}h1v1h-1z`);
+    path.setAttribute('d',commands.join(''));path.setAttribute('fill','#111111');svg.append(path);
+    c.append(svg);
+  }catch(error){
+    const marker=document.createElement('span');marker.className='text-xs text-slate-500';marker.textContent='QR indisponível';
+    c.append(marker);console.warn('QR Code:',error);
+  }
+}
+function refreshAllQRCodes() {
+  routeUrls.alvo=buildTargetMapUrl();
+  const caption=locationConfirmed() ? 'Localização confirmada' : (hasAddress()?'Endereço não verificado':'Sem endereço informado');
+  text('ui_qr_alvo_lbl',caption);
+  text('ui_qr_hosp_lbl',value('hosp_nome')||'Consulta de unidade médica');
+  text('ui_qr_pol_lbl',value('pol_nome')||'Consulta de unidade policial');
+  $('hosp_maps_link').href=routeUrls.hosp;
+  $('pol_maps_link').href=routeUrls.pol;
+  [['alvo','ui_qr_alvo'],['hosp','ui_qr_hosp'],['pol','ui_qr_pol']].forEach(([key,id])=>{
+    if(lastQrValues[id]!==routeUrls[key]) {renderNativeQR(id,routeUrls[key],108);lastQrValues[id]=routeUrls[key];}
+  });
+}
+function onManualUnitChange(kind, update = true) {
+  const name=value(kind+'_nome'),city=value('end_cidade'),addr=getAddressText();
+  if(kind==='hosp') routeUrls.hosp = name
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([name,city].filter(Boolean).join(', '))}`
+    : (hasAddress()?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('hospital UPA perto de '+addr)}`:'https://www.google.com/maps/search/hospital+upa');
+  else routeUrls.pol = name
+    ? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent([name,city].filter(Boolean).join(', '))}`
+    : (hasAddress()?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('delegacia perto de '+addr)}`:'https://www.google.com/maps/search/delegacia+de+policia');
+  if(update) { refreshAllQRCodes();saveState();updateDashboard(); }
+}
+function haversineKm(lat1,lon1,lat2,lon2) {
+  const R=6371,toRad=Math.PI/180,dl=(lat2-lat1)*toRad,doLon=(lon2-lon1)*toRad;
+  const a=Math.sin(dl/2)**2 + Math.cos(lat1*toRad)*Math.cos(lat2*toRad)*Math.sin(doLon/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+async function findSupportUnits() {
+  if(!hasAddress()) {showToast('Informe o logradouro antes da busca.','warn');return;}
+  const btn=$('btn-locate-support'),original=btn.innerHTML;
+  btn.disabled=true;btn.textContent='Consultando mapa...';
+  const address=getAddressText();
+  try {
+    // A consulta é acionada pelo usuário; o endereço é enviado ao OSM (sem CPF/fotos).
+    const nomUrl=`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address+', Brasil')}`;
+    const res=await fetch(nomUrl,{headers:{'Accept-Language':'pt-BR'}});
+    if(!res.ok)throw new Error('Falha no serviço de localização');
+    const data=await res.json();if(!Array.isArray(data)||!data[0])throw new Error('Endereço não encontrado no mapa');
+    if(getAddressText()!==address)throw new Error('Endereço alterado durante a busca: consulte novamente');
+    const lat=Number(data[0].lat),lon=Number(data[0].lon);
+    if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)throw new Error('Coordenadas incorretas');
+    $('geo_lat').value=lat.toFixed(6);$('geo_lon').value=lon.toFixed(6);
+    geoState={confirmed:false,fingerprint:address,origin:'Ponto sugerido pelo OpenStreetMap/Nominatim',fetchedAt:new Date().toISOString()};
+    if(value('ev_endereco_status')==='confirmado')$('ev_endereco_status').value='nao_verificado';
+    renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
+    const query=`[out:json][timeout:15];(node["amenity"="hospital"](around:15000,${lat},${lon});way["amenity"="hospital"](around:15000,${lat},${lon});node["amenity"="clinic"]["emergency"="yes"](around:15000,${lat},${lon});node["amenity"="police"](around:15000,${lat},${lon});way["amenity"="police"](around:15000,${lat},${lon}););out center 300;`;
+    let nearby=[];
+    try {
+      const support=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:query});
+      if(support.ok) {const raw=await support.json();nearby=Array.isArray(raw.elements)?raw.elements:[];}
+    } catch (_) {showToast('Coordenadas obtidas. Busca de unidades indisponível; preencha manualmente.','warn');}
+    if(getAddressText()!==address)throw new Error('Endereço alterado durante a busca: consulte novamente');
+    let hosp=null,pol=null;
+    for(const e of nearby) {
+      const eLat=Number(e.lat??e.center?.lat),eLon=Number(e.lon??e.center?.lon);
+      if(!Number.isFinite(eLat)||!Number.isFinite(eLon))continue;
+      const tags=e.tags||{}, name=tags.name||tags['name:pt'];if(!name)continue;
+      const dist=haversineKm(lat,lon,eLat,eLon);
+      const cand={name,lat:eLat,lon:eLon,dist};
+      if(['hospital','clinic'].includes(tags.amenity) && (!hosp||dist<hosp.dist))hosp=cand;
+      if(tags.amenity==='police' && (!pol||dist<pol.dist))pol=cand;
+    }
+    if(hosp){$('hosp_nome').value=hosp.name;$('hosp_dist').value=hosp.dist.toFixed(1).replace('.',',')+' km (linha reta)';routeUrls.hosp=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${hosp.lat},${hosp.lon}&travelmode=driving`;}
+    if(pol){$('pol_nome').value=pol.name;$('pol_dist').value=pol.dist.toFixed(1).replace('.',',')+' km (linha reta)';routeUrls.pol=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${pol.lat},${pol.lon}&travelmode=driving`;}
+    refreshAllQRCodes();saveState();updateDashboard();
+    showToast('Coordenadas sugeridas. Confira no mapa e confirme manualmente.');
+  } catch(e) {showToast((e.message||'Consulta externa indisponível')+'. Tente outra forma de registro.','warn');}
+  finally {btn.disabled=false;btn.innerHTML=original;}
+}
+function statNumber(key) {
+  const slider = $('stat_' + key);
+  if(!slider) return null;
+  const n = Number(slider.value);
+  return Number.isFinite(n) && n >= 0 && n <= 100 ? n : null;
+}
+function onStatSlider(key) {
+  updateStats();
+}
+function statColor(key,n) {
+  if(n===null)return '#747b83';
+  if(key==='risco')return n<=35?'#0d8568':(n<=70?'#b47813':'#bd393a');
+  return n<50?'#bd393a':(n<80?'#b47813':'#0d8568');
+}
+function updateStats(shouldSave=true) {
+  STAT_KEYS.forEach(key=>{
+    const n=statNumber(key),color=statColor(key,n);
+    const readable=key==='endereco'?'endereco':key;
+    const span=$('val_'+readable),bar=$('bar_'+readable),slider=$('stat_'+key);
+    span.textContent=n===null?'Não avaliado':`${n}%`;
+    span.style.color=n===null?'':color;
+    bar.style.width=n===null?'0%':`${n}%`;
+    bar.style.backgroundColor=color;
+    slider.disabled=false;
+  });
+  if(shouldSave){saveState();updateDashboard();}
+}
+function evidenceStatus(key) {
+  return STATUS_LABELS[value('ev_'+key+'_status')]||STATUS_LABELS.nao_avaliado;
+}
+function readWarnings() {
+  const warnings=[];
+  if(!value('op_nome')) warnings.push('Operação / inquérito não informado.');
+  if(!value('op_unidade'))warnings.push('Unidade / equipe não informada.');
+  if(!value('op_datahora'))warnings.push('Data e hora previstas não informadas.');
+  if(!value('op_responsavel'))warnings.push('Responsável pela elaboração não informado.');
+  if(!hasAddress())warnings.push('Logradouro do endereço não informado.');
+  else if(!locationConfirmed())warnings.push('Endereço ainda não verificado por coordenadas e conferência manual.');
+  const used=targets.filter(t=>t.nome.trim()||t.vulgo.trim()||t.cpf.trim()||t.photo);
+  if(!used.length)warnings.push('Nenhum alvo identificado foi informado.');
+  used.forEach((t,i)=>{
+    if(!t.nome.trim())warnings.push(`Alvo ${i+1}: nome não informado.`);
+    if(t.cpf.trim()&&!validCPF(t.cpf))warnings.push(`Alvo ${i+1}: CPF inválido.`);
+  });
+  for(const key of EVIDENCE_KEYS) {
+    const status=value('ev_'+key+'_status');
+    const active = (key==='endereco'&&hasAddress()) || status!=='nao_avaliado' || (key==='risco'&&statNumber('risco')!==null) ||
+      (key==='presenca'&&statNumber('presenca')!==null) || (key==='endereco'&&statNumber('endereco')!==null);
+    if(!active)continue;
+    const label={endereco:'endereço',presenca:'presença',risco:'risco'}[key];
+    if(status==='nao_avaliado') warnings.push(`Classificação de ${label} não avaliada.`);
+    if(!value('ev_'+key+'_fonte'))warnings.push(`Fonte da informação de ${label} não informada.`);
+    if(!value('ev_'+key+'_data'))warnings.push(`Data da informação de ${label} não informada.`);
+  }
+  return warnings;
+}
+function countQuality() {
+  const used=targets.filter(t=>t.nome.trim()||t.vulgo.trim()||t.cpf.trim()||t.photo);
+  return [value('op_nome'),value('op_unidade'),value('op_datahora'),value('op_responsavel'),hasAddress(),
+    locationConfirmed(),used.length>0,used.length>0&&used.every(t=>!t.cpf||validCPF(t.cpf)),
+    value('ev_endereco_fonte')&&value('ev_endereco_data'),
+    ['risco','presenca'].every(k=>value('ev_'+k+'_status')!=='nao_avaliado' && value('ev_'+k+'_fonte')&&value('ev_'+k+'_data'))
+  ].filter(Boolean).length;
+}
+function updateDashboard() {
+  // Retain the original completeness and nonblocking-validation calculations.
+  const used = targets.filter(t => t.nome.trim() || t.vulgo.trim() || t.cpf.trim() || t.photo);
+  return {targets:used.length, warnings:readWarnings(), quality:countQuality()};
+}
+function setPrint(id,content) {text(id,content||'—');}
+function formatDateTime(s) {
+  if(!s)return 'Não informado';
+  const d=new Date(s);return Number.isNaN(d.valueOf())?s:d.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+}
+function formatDate(s) {
+  if(!s)return 'Não informada';
+  const bits=s.split('-');return bits.length===3?`${bits[2]}/${bits[1]}/${bits[0]}`:s;
+}
+function createPrintableTarget(t,i) {
+  const photo=safePhotoData(t.photo);
+  return `<div class="p-target-card ${photo?'with-photo':''}">
+    ${photo?`<img src="${photo}" class="p-target-photo" alt="Fotografia do alvo ${i+1}" />`
+    :`<div class="p-target-placeholder" aria-label="Sem fotografia">#${String(i+1).padStart(2,'0')}</div>`}
+    <div class="p-target-details"><div class="p-target-name">#${String(i+1).padStart(2,'0')} · ${escapeHtml(t.nome)||'Nome não informado'}</div>
+      <div class="p-target-meta"><strong>CPF:</strong> ${escapeHtml(t.cpf)||'Não informado'}${t.cpf&&!validCPF(t.cpf)?' (verificar)':''}</div>
+      ${t.vulgo?`<div class="p-target-meta"><strong>Vulgo / Obs.:</strong> ${escapeHtml(t.vulgo)}</div>`:''}
+    </div>
+  </div>`;
+}
+async function prepareAndPrint() {
+  const now=new Date();
+  const dt=now.toLocaleString('pt-BR',{dateStyle:'short',timeStyle:'short'});
+  setPrint('p_emissao',dt);setPrint('p_footer_emissao',dt);
+  setPrint('p_op_nome',labelIfBlank(value('op_nome')));
+  setPrint('p_op_unidade',labelIfBlank(value('op_unidade')));
+  setPrint('p_op_datahora',formatDateTime(value('op_datahora')));
+  setPrint('p_op_responsavel',labelIfBlank(value('op_responsavel')));
+  setPrint('p_endereco',hasAddress()?getAddressText():'Não informado');
+  setPrint('p_referencia',labelIfBlank(value('end_ref')));
+  prepareLocationPhotoPrint();
+  setPrint('p_geo_status',locationConfirmed()?'Localização confirmada':'Endereço ainda não verificado');
+  const coords=currentCoords();
+  setPrint('p_geo_coords',coords ? `${coords.lat.toFixed(6)}, ${coords.lon.toFixed(6)}${locationConfirmed()?' • conferência manual':' • ponto não confirmado'}` : 'Coordenadas não disponíveis');
+  setPrint('p_hospital',labelIfBlank(value('hosp_nome')));
+  setPrint('p_hosp_dist',value('hosp_dist')?'Distância indicada: '+value('hosp_dist'):'Distância não informada');
+  setPrint('p_delegacia',labelIfBlank(value('pol_nome')));
+  setPrint('p_pol_dist',value('pol_dist')?'Distância indicada: '+value('pol_dist'):'Distância não informada');
+  routeUrls.alvo=buildTargetMapUrl();
+  [['alvo','p_qr_alvo'],['hosp','p_qr_hosp'],['pol','p_qr_pol']].forEach(([key,id])=>renderNativeQR(id,routeUrls[key],128));
+  STAT_KEYS.forEach(key=>{
+    const suffix={risco:'risco',endereco:'end',presenca:'pres'}[key];
+    const n=statNumber(key),color=statColor(key,n);
+    setPrint('p_stat_'+suffix+'_txt',n===null?'Não avaliado':`${n}%`);
+    $('p_stat_'+suffix+'_txt').style.color=n===null?'#5d6670':color;
+    $('p_stat_'+suffix+'_bar').style.width=n===null?'0%':`${n}%`;
+    $('p_stat_'+suffix+'_bar').style.backgroundColor=color;
+  });
+  setPrint('p_q_imovel',value('q_imovel'));
+  const barriers=[];
+  if($('q_portao').checked)barriers.push('Portão eletrônico / grade');
+  if($('q_caes').checked)barriers.push('Cães de guarda');
+  if($('q_cameras').checked)barriers.push('CFTV / câmeras');
+  if($('q_fuga').checked)barriers.push('Rota de fuga');
+  if($('q_olheiros').checked)barriers.push('Olheiros / barricadas');
+  setPrint('p_q_barreiras',barriers.length?barriers.join('; '):'Não avaliado / sem informação');
+  setPrint('p_q_armas',value('q_armas'));
+  setPrint('p_q_faccao',labelIfBlank(value('q_faccao')));
+  const vuln=[];if($('q_criancas').checked)vuln.push('Crianças');if($('q_idosos').checked)vuln.push('Idosos, gestantes ou PcD');
+  setPrint('p_q_vulneraveis',vuln.length?vuln.join('; '):'Não avaliado / sem informação');
+  setPrint('p_q_provavida',value('q_provavida'));
+  setPrint('p_q_janela',labelIfBlank(value('q_janela')));
+  setPrint('p_q_veiculos',labelIfBlank(value('q_veiculos')));
+  EVIDENCE_KEYS.forEach(key=>{
+    setPrint('p_ev_'+key+'_status',evidenceStatus(key));
+    setPrint('p_ev_'+key+'_fonte',labelIfBlank(value('ev_'+key+'_fonte')));
+    setPrint('p_ev_'+key+'_data',formatDate(value('ev_'+key+'_data')));
+  });
+  const used=targets.filter(t=>t.nome.trim()||t.vulgo.trim()||t.cpf.trim()||t.photo);
+  text('p_total_targets',used.length);
+  $('p_targets_container').innerHTML=(used.length?used:[newTarget()]).map((t,i)=>createPrintableTarget(t,i)).join('');
+  const warnings=readWarnings();
+  if(warnings.length)showToast(`Relatório com ${warnings.length} aviso(s). A emissão continua normalmente.`,'warn');
+  const imgs=Array.from($('print-sheet').querySelectorAll('img'));
+  await Promise.all(imgs.map(img=>img.decode?.().catch(()=>{})||Promise.resolve()));
+  window.requestAnimationFrame(()=>window.print());
+}
+function composeState(includePhotos=false) {
+  const fields={};FIELD_IDS.forEach(id=>{fields[id]=$(id).value;});
+  const checks={};CHECKBOX_IDS.forEach(id=>{checks[id]=$(id).checked;});
+  return {
+    format:'levantamento144-v2', version:2,fields,checks,targets:targets.map(t=>includePhotos?{...t}:{id:t.id,nome:t.nome,vulgo:t.vulgo,cpf:t.cpf}),
+    geoState:{...geoState},routeUrls:{...routeUrls},
+    locationPhotoWidth, ...(includePhotos ? {locationPhoto} : {}),
+    exportedAt:includePhotos?new Date().toISOString():undefined
+  };
+}
+function saveState() {
+  if(initializing)return;
+  const payload=composeState(photoBackend!=='ready');
+  try {
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(payload));
+    storageWarned=false;
+  }catch(e){
+    if(!storageWarned){showToast('Memória local cheia. Seus dados permanecem nesta aba, mas alterações podem não ser salvas. Exporte um backup.','error');storageWarned=true;}
+  }
+}
+function loadState() {
+  const raw=safeGetItem(STORAGE_KEY)||safeGetItem(LEGACY_STORAGE_KEY);
+  if(!raw)return false;
+  try {
+    const state=JSON.parse(raw);
+    if(state.fields && typeof state.fields==='object') {
+      FIELD_IDS.forEach(id=>{
+        if(id.startsWith('stat_')) return;
+        if(typeof state.fields[id]==='string'||typeof state.fields[id]==='number')$(id).value=String(state.fields[id]);
+      });
+      for(const key of STAT_KEYS) {
+        const id='stat_'+key;
+        const raw=state.fields[id] ?? state.fields[id+'_input'];
+        const n=Number(raw);
+        $(id).value=raw!=='' && raw!=null && Number.isFinite(n) && n>=0 && n<=100 ? String(Math.round(n)) : '50';
+      }
+    }
+    if(state.checks && typeof state.checks==='object')CHECKBOX_IDS.forEach(id=>{if(typeof state.checks[id]==='boolean')$(id).checked=state.checks[id];});
+    if(Array.isArray(state.targets)&&state.targets.length) {
+      targets=state.targets.slice(0,MAX_TARGETS).map(t=>({
+        id:typeof t.id==='string' && /^[a-zA-Z0-9-]{1,72}$/.test(t.id)?t.id:createId(),
+        nome:String(t.nome||'').slice(0,800),vulgo:String(t.vulgo||'').slice(0,800),
+        cpf:formatCPF(String(t.cpf||'')),photo:safePhotoData(t.photo)
+      }));
+    }
+    locationPhoto = safePhotoData(state.locationPhoto);
+    locationPhotoWidth = validLocationPhotoWidth(state.locationPhotoWidth);
+    if(state.geoState && typeof state.geoState==='object')geoState={
+      confirmed:!!state.geoState.confirmed,fingerprint:String(state.geoState.fingerprint||''),
+      origin:String(state.geoState.origin||''),fetchedAt:String(state.geoState.fetchedAt||'')
+    };
+    if(state.routeUrls && typeof state.routeUrls==='object') {
+      for(const k of ['hosp','pol'])routeUrls[k]=sanitizeMapsUrl(state.routeUrls[k],routeUrls[k]);
+    }
+    if(geoState.fingerprint!==getAddressText())geoState.confirmed=false;
+    // Os valores 50/80/75 e os primeiros itens do questionário na versão
+    // anterior eram pré-atribuídos: não contam como fatos confirmados.
+    if (!safeGetItem(STORAGE_KEY) && safeGetItem(LEGACY_STORAGE_KEY)) {
+      for (const id of ['q_imovel', 'q_armas', 'q_provavida']) $(id).value = 'Não avaliado';
+      for (const key of STAT_KEYS) $('stat_'+key).value = '50';
+      showToast('Rascunho anterior importado. Valores antes preenchidos por padrão foram marcados como Não avaliado.', 'warn');
+    }
+    if(geoState.fingerprint!==getAddressText() || !currentCoords()) {
+      geoState.confirmed=false;
+      if (value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
+    }
+    return true;
+  }catch(e){console.warn('Rascunho local inválido:',e);showToast('Não foi possível ler o rascunho anterior.','warn');return false;}
+}
+async function initializePhotos() {
+  try {
+    await openPhotoDB();
+    // Migração segura de fotografias que estavam embutidas no localStorage legado.
+    for(const t of targets) {
+      if(t.photo)await photoStore('put',t.id,t.photo);
+      else t.photo=safePhotoData(await photoStore('get',t.id));
+    }
+    if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
+    else locationPhoto = safePhotoData(await photoStore('get', LOCATION_PHOTO_KEY));
+    photoBackend='ready';
+    safeRemoveItem(LEGACY_STORAGE_KEY);
+  }catch(e){
+    photoBackend='fallback';
+    showToast('IndexedDB indisponível. Fotos tentarão ser salvas no armazenamento local convencional.','warn');
+  }
+  renderTargets();renderLocationPhotoUI();saveState();
+}
+function exportBackup() {
+  try {
+    const json=JSON.stringify(composeState(true),null,2);
+    const blob=new Blob([json],{type:'application/json;charset=utf-8'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download='levantamento144_backup_'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();
+    window.setTimeout(()=>URL.revokeObjectURL(url),2000);showToast('Backup criado localmente. Guarde o arquivo em local protegido.');
+  }catch(e){showToast('Não foi possível exportar backup: '+e.message,'error');}
+}
+async function importBackup(event) {
+  const file=event.target.files?.[0];event.target.value='';if(!file)return;
+  if(!window.confirm('Importar este backup substituirá os dados atuais. Deseja continuar?'))return;
+  try {
+    if(file.size>80*1024*1024)throw new Error('Arquivo maior que 80 MB');
+    const obj=JSON.parse(await file.text());
+    if(!obj||typeof obj!=='object'||!obj.fields||!Array.isArray(obj.targets)||obj.targets.length>MAX_TARGETS)throw new Error('Arquivo de backup incompatível');
+    // Guardar dados atuais até concluir a leitura do backup.
+    initializing=true;
+    const backupCurrent=composeState(true);
+    try {
+      for(const id of FIELD_IDS) {
+        const raw=obj.fields[id] ?? (id.startsWith('stat_') ? obj.fields[id+'_input'] : undefined);
+        if(id.startsWith('stat_')) {
+          const n=Number(raw);
+          $(id).value=raw!=='' && raw!=null && Number.isFinite(n) && n>=0 && n<=100 ? String(Math.round(n)) : '50';
+        } else $(id).value=(typeof raw==='string'||typeof raw==='number')?String(raw):(id==='end_cidade'?'João Pessoa - PB':'');
+      }
+      for(const id of CHECKBOX_IDS)$(id).checked=!!obj.checks?.[id];
+      targets=(obj.targets.length?obj.targets:[newTarget()]).map(t=>({
+        id:typeof t.id==='string'&&/^[a-zA-Z0-9-]{1,72}$/.test(t.id)?t.id:createId(),
+        nome:String(t.nome||'').slice(0,800),vulgo:String(t.vulgo||'').slice(0,800),cpf:formatCPF(String(t.cpf||'')),photo:safePhotoData(t.photo)
+      }));
+      locationPhoto = safePhotoData(obj.locationPhoto);
+      locationPhotoWidth = validLocationPhotoWidth(obj.locationPhotoWidth);
+      geoState={confirmed:!!obj.geoState?.confirmed,fingerprint:String(obj.geoState?.fingerprint||''),origin:String(obj.geoState?.origin||''),fetchedAt:String(obj.geoState?.fetchedAt||'')};
+      routeUrls={alvo:'https://www.google.com/maps',hosp:sanitizeMapsUrl(obj.routeUrls?.hosp,'https://www.google.com/maps/search/hospital+upa'),pol:sanitizeMapsUrl(obj.routeUrls?.pol,'https://www.google.com/maps/search/delegacia+de+policia')};
+      if(geoState.fingerprint !== getAddressText() || !currentCoords()) {
+        geoState.confirmed = false;
+        if (value('ev_endereco_status') === 'confirmado') $('ev_endereco_status').value = 'nao_verificado';
+      }
+      if(photoBackend==='ready'){
+        await photoStore('clear');
+        for(const t of targets)if(t.photo)await photoStore('put',t.id,t.photo);
+        if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
+      }
+    }catch(e){
+      // Repor a cópia em memória se a importação falhar.
+      for(const id of FIELD_IDS)$(id).value=backupCurrent.fields[id]||'';
+      for(const id of CHECKBOX_IDS)$(id).checked=!!backupCurrent.checks[id];
+      targets=backupCurrent.targets;
+      locationPhoto=backupCurrent.locationPhoto;
+      locationPhotoWidth=validLocationPhotoWidth(backupCurrent.locationPhotoWidth);
+      geoState=backupCurrent.geoState;routeUrls=backupCurrent.routeUrls;
+      if(photoBackend==='ready') {
+        await photoStore('clear');
+        for(const t of targets)if(t.photo)await photoStore('put',t.id,t.photo);
+        if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
+      }
+      renderLocationPhotoUI();
+      throw e;
+    } finally{initializing=false;}
+    lastQrValues={};renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
+    showToast('Backup importado com sucesso. Confira a origem das informações.');
+  }catch(e){initializing=false;showToast('Não foi possível importar: '+(e.message||e),'error');}
+}
+async function resetAll() {
+  if(!window.confirm('Apagar todos os dados deste levantamento, incluindo fotografias? Esta ação não pode ser desfeita.'))return;
+  initializing=true;
+  safeRemoveItem(STORAGE_KEY);safeRemoveItem(LEGACY_STORAGE_KEY);
+  if(photoBackend==='ready') try{await photoStore('clear');}catch(_){showToast('Não foi possível limpar todas as fotografias locais.','warn');}
+  FIELD_IDS.forEach(id=>{
+    const el=$(id);if(id==='end_cidade')el.value='João Pessoa - PB';
+    else if(el.tagName==='SELECT')el.selectedIndex=0;
+    else if(el.type==='range')el.value='50';
+    else el.value='';
+  });
+  CHECKBOX_IDS.forEach(id=>$(id).checked=false);
+  locationPhoto='';locationPhotoWidth=LOCATION_PHOTO_DEFAULT_WIDTH;
+  targets=[newTarget()];routeUrls={alvo:'https://www.google.com/maps',hosp:'https://www.google.com/maps/search/hospital+upa',pol:'https://www.google.com/maps/search/delegacia+de+policia'};
+  geoState={confirmed:false,fingerprint:'',origin:'',fetchedAt:''};lastQrValues={};storageWarned=false;
+  initializing=false;
+  renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
+  showToast('Formulário limpo após confirmação.');
+}
+window.addEventListener('DOMContentLoaded', async () => {
+  applyTheme(safeGetItem(THEME_KEY)==='dark'?'dark':'light');
+  initializing=true;
+  loadState();
+  initializing=false;
+  renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);updateDashboard();
+  FIELD_IDS.forEach(id=>{
+    const el=$(id);if(!el)return;
+    el.addEventListener('change',()=>{saveState();updateDashboard();});
+    if(['INPUT','TEXTAREA'].includes(el.tagName))el.addEventListener('input',()=>{saveState();updateDashboard();});
+  });
+  CHECKBOX_IDS.forEach(id=>$(id).addEventListener('change',()=>{saveState();updateDashboard();}));
+  await initializePhotos();
+});
+
+  </script>
+</body>
+</html>
