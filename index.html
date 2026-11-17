@@ -98,7 +98,7 @@ html.dark .warning-list {color:#d2d5d8;}
   }
 
 
-/* Unica excecao ao estilo neutro: o botao de emissao do relatorio. */
+/* Estilo de referência para os botões azuis: emissão do relatório. */
 #app-ui #btn-generate-pdf {
   appearance:none;
   position:relative;
@@ -137,6 +137,8 @@ html.dark .warning-list {color:#d2d5d8;}
   #app-ui #btn-generate-pdf {transition:none;}
   #app-ui #btn-generate-pdf:hover,#app-ui #btn-generate-pdf:active {transform:none;}
 }
+
+
 
 #print-sheet {display:none;}
 @page {size:A4 portrait;margin:12mm 12mm 14mm;}
@@ -183,6 +185,7 @@ html.dark .warning-list {color:#d2d5d8;}
   .p-target-meta {font-size:7.7pt;margin-top:3px;overflow-wrap:anywhere;}
   .report-closing {display:block;break-inside:avoid;page-break-inside:avoid;margin-top:70px;}
   .signature-area {width:250px;margin:24px auto 13px;text-align:center;}
+  .p-signature-image {display:block;max-width:240px;max-height:85px;width:auto;height:auto;object-fit:contain;margin:0 auto 5px;}
   .signature-rule {height:1px;background:#2d3239;width:100%;}
   .signature-name {font-size:8pt;margin-top:5px;font-weight:700;}
   .print-footer {border-top:1px solid #89939d;padding-top:8px;display:flex;gap:14px;justify-content:space-between;font-size:7.3pt;color:#4d5660;}
@@ -213,6 +216,124 @@ html.dark .warning-list {color:#d2d5d8;}
     #app-ui header > div:last-child {flex-wrap:wrap;gap:8px;}
     #app-ui .qr-frame svg {width:90px!important;height:90px!important;}
   }
+  /* Mesma cor azul do botão Gerar Relatório em todos os botões e anexos clicáveis. */
+#app-ui button,
+#app-ui button[class],
+#app-ui label[for="import_backup"],
+#app-ui label[for="location_photo_file"],
+#app-ui label[for="signature_file"],
+#app-ui .target-photo-empty {
+  color:#fff !important;
+  border-color:rgba(255,255,255,.58) !important;
+  background:linear-gradient(135deg,rgba(18,88,215,.88) 0%,rgba(40,129,239,.78) 53%,rgba(15,97,217,.89) 100%) !important;
+}
+#app-ui button:hover,
+#app-ui button[class]:hover,
+#app-ui label[for="import_backup"]:hover,
+#app-ui label[for="location_photo_file"]:hover,
+#app-ui label[for="signature_file"]:hover,
+#app-ui .target-photo-empty:hover {
+  background:linear-gradient(135deg,rgba(15,81,208,.92) 0%,rgba(37,130,247,.84) 53%,rgba(11,86,209,.93) 100%) !important;
+  color:#fff !important;
+}
+#app-ui button svg, #app-ui button svg[class] {color:#fff!important;}
+#app-ui button:disabled {opacity:.55;cursor:not-allowed;}
+/* Mesmo alinhamento superior da foto, dos dados e dos botões de consulta (painel 03). */
+#app-ui .target-editor-row {align-items:flex-start !important;}
+#app-ui .target-editor-row .target-actions {align-self:flex-start !important;}
+#app-ui .target-editor-row .target-actions button {min-height:35px;}
+#app-ui .target-editor-row .target-fields input {min-height:35px;}
+.signature-preview {display:block;max-width:250px;max-height:110px;height:auto;object-fit:contain;margin-top:12px;background:#fff;border:1px solid #cbd0d5;}
+.signature-preview[hidden],#btn-remove-signature[hidden],.p-signature-image[hidden] {display:none!important;}
+.p-location-link {display:block;overflow-wrap:anywhere;}
+
+
+/* Glassmorphism neutro nos botoes superiores, das secoes e controles anexos. */
+#app-ui button:not(#btn-generate-pdf),
+#app-ui label[for="import_backup"],
+#app-ui label[for="location_photo_file"],
+#app-ui label[for="signature_file"],
+#app-ui .target-photo-empty {
+  color:#334155 !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(225,232,241,.54)) !important;
+  border:1px solid rgba(255,255,255,.74) !important;
+  border-radius:12px !important;
+  -webkit-backdrop-filter:blur(14px) saturate(150%);
+  backdrop-filter:blur(14px) saturate(150%);
+  box-shadow:0 3px 12px rgba(36,49,64,.1),inset 0 1px 0 rgba(255,255,255,.75) !important;
+  text-shadow:none !important;
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+#app-ui button:not(#btn-generate-pdf):hover,
+#app-ui label[for="import_backup"]:hover,
+#app-ui label[for="location_photo_file"]:hover,
+#app-ui label[for="signature_file"]:hover,
+#app-ui .target-photo-empty:hover {
+  color:#17263a !important;
+  background:linear-gradient(145deg,rgba(255,255,255,.94),rgba(214,226,241,.7)) !important;
+  border-color:rgba(189,202,221,.9) !important;
+  box-shadow:0 5px 16px rgba(36,49,64,.15),inset 0 1px 0 rgba(255,255,255,.85) !important;
+}
+#app-ui button:not(#btn-generate-pdf) svg,
+#app-ui button:not(#btn-generate-pdf) svg[class] {color:inherit !important;}
+html.dark #app-ui button:not(#btn-generate-pdf),
+html.dark #app-ui label[for="import_backup"],
+html.dark #app-ui label[for="location_photo_file"],
+html.dark #app-ui label[for="signature_file"],
+html.dark #app-ui .target-photo-empty {
+  color:#edf2f7 !important;
+  background:linear-gradient(145deg,rgba(114,125,142,.28),rgba(50,60,73,.33)) !important;
+  border-color:rgba(211,221,236,.28) !important;
+  box-shadow:0 4px 15px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.12) !important;
+}
+html.dark #app-ui button:not(#btn-generate-pdf):hover,
+html.dark #app-ui label[for="import_backup"]:hover,
+html.dark #app-ui label[for="location_photo_file"]:hover,
+html.dark #app-ui label[for="signature_file"]:hover,
+html.dark #app-ui .target-photo-empty:hover {
+  color:#fff !important;
+  background:linear-gradient(145deg,rgba(132,148,167,.37),rgba(69,82,100,.4)) !important;
+  border-color:rgba(226,235,246,.4) !important;
+}
+#app-ui button:not(#btn-generate-pdf):disabled {opacity:.5;cursor:not-allowed;}
+#app-ui .qr-empty {width:108px;height:108px;display:flex;align-items:center;justify-content:center;text-align:center;padding:10px;background:#f1f5f9;color:#637083;font-size:11px;line-height:1.4;}
+html.dark #app-ui .qr-empty {background:#e2e8f0;color:#475569;}
+@media print {.p-qr-cell .qr-empty {display:flex;align-items:center;justify-content:center;width:128px;height:128px;padding:6px;background:#f1f5f9;color:#637083;font-size:9pt;line-height:1.35;text-align:center;}}
+/* Sliders azuis, arredondados e com progresso proporcional (0-100). */
+#app-ui .stats-index input[type="range"] {
+  appearance:none;-webkit-appearance:none;
+  width:100%;height:24px;background:transparent !important;
+  cursor:pointer;accent-color:#2563eb;touch-action:pan-y;
+}
+#app-ui .stats-index input[type="range"]::-webkit-slider-runnable-track {
+  height:8px !important;
+  background:linear-gradient(to right,#2563eb 0%,#2563eb var(--range-progress,50%),#dbe3ee var(--range-progress,50%),#dbe3ee 100%) !important;
+  border:0 !important;border-radius:999px !important;
+}
+#app-ui .stats-index input[type="range"]::-webkit-slider-thumb {
+  appearance:none;-webkit-appearance:none;
+  margin-top:-6px !important;width:20px !important;height:20px !important;
+  border:3px solid #fff !important;border-radius:50% !important;
+  background:#2563eb !important;box-shadow:0 1px 5px rgba(37,99,235,.36) !important;
+}
+#app-ui .stats-index input[type="range"]::-moz-range-track {
+  height:8px !important;border:0 !important;border-radius:999px !important;
+  background:linear-gradient(to right,#2563eb 0%,#2563eb var(--range-progress,50%),#dbe3ee var(--range-progress,50%),#dbe3ee 100%) !important;
+}
+#app-ui .stats-index input[type="range"]::-moz-range-thumb {
+  width:14px !important;height:14px !important;
+  border:3px solid #fff !important;border-radius:50% !important;
+  background:#2563eb !important;box-shadow:0 1px 5px rgba(37,99,235,.36) !important;
+}
+html.dark #app-ui .stats-index input[type="range"]::-webkit-slider-runnable-track {
+  background:linear-gradient(to right,#60a5fa 0%,#60a5fa var(--range-progress,50%),#465166 var(--range-progress,50%),#465166 100%) !important;
+}
+html.dark #app-ui .stats-index input[type="range"]::-moz-range-track {
+  background:linear-gradient(to right,#60a5fa 0%,#60a5fa var(--range-progress,50%),#465166 var(--range-progress,50%),#465166 100%) !important;
+}
+html.dark #app-ui .stats-index input[type="range"]::-webkit-slider-thumb,
+html.dark #app-ui .stats-index input[type="range"]::-moz-range-thumb {border-color:#1b2534 !important;}
+
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900 dark:bg-zinc-950 dark:text-zinc-100 antialiased selection:bg-slate-600 selection:text-white">
@@ -231,7 +352,6 @@ html.dark .warning-list {color:#d2d5d8;}
         <img src="./logo.png" width="58" height="58" alt="Logo Levantamento144" class="brand-logo" />
         <div>
           <h1 class="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">Levantamento144</h1>
-          <span class="text-xs font-mono text-slate-500 dark:text-zinc-400">REGISTRO E CONSOLIDAÇÃO • V2.0</span>
         </div>
       </div>
 
@@ -300,7 +420,7 @@ html.dark .warning-list {color:#d2d5d8;}
             <input type="text" id="end_cidade" value="João Pessoa - PB" oninput="onAddressChange()" class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
           </div>
           <div class="sm:col-span-7">
-            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Ponto de Referência / Coordenadas</label>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-zinc-300 mb-1">Ponto de Referência</label>
             <input type="text" id="end_ref" placeholder="Portão cinza, esquina com farmácia..." class="w-full rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 px-3 py-2 text-sm text-slate-900 dark:text-white focus:border-blue-500 focus:outline-none" />
           </div>
         </div>
@@ -309,13 +429,10 @@ html.dark .warning-list {color:#d2d5d8;}
 
         <!-- Imagem do local: anexo local e largura ajustavel no PDF. -->
         <div id="location-photo-panel" class="mt-4 neutral-surface">
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <label for="location_photo_file" class="text-xs font-bold uppercase tracking-wide">Imagem do Local (Endere&ccedil;o)</label>
-            <button type="button" id="btn-remove-location-photo" onclick="removeLocationPhoto()" class="px-3 py-1.5 border border-slate-300 dark:border-zinc-700 text-xs font-semibold" hidden>Remover imagem</button>
-          </div>
           <div class="flex flex-col gap-3">
             <div class="flex flex-wrap items-center gap-3">
               <label for="location_photo_file" class="px-3.5 py-2 border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-semibold cursor-pointer">Anexar imagem</label>
+              <button type="button" id="btn-remove-location-photo" onclick="removeLocationPhoto()" class="px-3 py-1.5 border border-slate-300 dark:border-zinc-700 text-xs font-semibold" hidden>Remover imagem</button>
               <input id="location_photo_file" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="handleLocationPhotoUpload(event)" aria-label="Anexar imagem do local" />
               <div class="location-photo-size-control flex items-center gap-2">
                 <label for="location_photo_size" class="text-xs font-semibold whitespace-nowrap">Tamanho no PDF</label>
@@ -328,21 +445,16 @@ html.dark .warning-list {color:#d2d5d8;}
         </div>
 
         <div class="mt-4 neutral-surface" id="geo-panel">
-          <div class="flex flex-wrap items-center justify-between gap-3 mb-2">
-            <h3 class="text-xs font-bold uppercase tracking-wide">Validação da localização</h3>
-            <span id="geo-status" class="status-line" aria-live="polite">Endereço ainda não verificado</span>
-          </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 items-end">
-            <div class="metadata-field"><label for="geo_lat">Latitude</label><input id="geo_lat" type="text" inputmode="decimal" placeholder="Ex.: -7.123456" oninput="onCoordinatesChange()" /></div>
-            <div class="metadata-field"><label for="geo_lon">Longitude</label><input id="geo_lon" type="text" inputmode="decimal" placeholder="Ex.: -34.123456" oninput="onCoordinatesChange()" /></div>
-            <div class="lg:col-span-2 flex items-center gap-3 flex-wrap">
-              <a id="geo-preview-link" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold underline underline-offset-2 text-slate-700 dark:text-zinc-200">Conferir ponto no mapa</a>
-              <span id="geo-origin" class="status-caption">Nenhuma coordenada registrada.</span>
-            </div>
-          </div>
-          <label class="flex items-start gap-2 mt-3 text-xs font-semibold cursor-pointer"><input id="geo_confirm" type="checkbox" onchange="confirmLocation(this.checked)" class="mt-0.5" disabled />
-            Conferi o ponto no mapa e confirmo manualmente sua correspondência com o endereço informado.
+          <label class="flex items-start gap-2 text-xs font-semibold cursor-pointer">
+            <input id="geo_confirm" type="checkbox" onchange="confirmLocation(this.checked)" class="mt-0.5" />
+            <span>Validação manual — Confirmo que conferi o endereço e a localização informados.</span>
           </label>
+        </div>
+        <div class="mt-4 neutral-surface" id="support-map-link-panel">
+          <div class="metadata-field">
+            <label for="geo_maps_url">Link do Google Maps para busca das unidades de apoio</label>
+            <input id="geo_maps_url" type="url" inputmode="url" placeholder="Cole o link do local para localizar hospital e delegacia" oninput="onMapUrlChange()" />
+          </div>
         </div>
         <!-- Unidades de Apoio (Hospital/UPA + Delegacia) -->
         <div class="mt-4 pt-4 border-t border-slate-200 dark:border-zinc-800 grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -394,6 +506,14 @@ html.dark .warning-list {color:#d2d5d8;}
           </button>
         </div>
 
+        <div class="mt-4 neutral-surface" id="target-qr-link-panel">
+          <div class="metadata-field">
+            <label for="target_maps_share_url">Link de compartilhamento do Google Maps para o QR Code do alvo</label>
+            <input id="target_maps_share_url" type="url" inputmode="url" placeholder="Cole o link obtido em Compartilhar no Google Maps" oninput="onTargetShareUrlChange()" />
+          </div>
+          <p class="status-caption mt-2">No Google Maps, abra o local, escolha <strong>Compartilhar</strong> e depois <strong>Copiar link</strong>. Cole aqui: o QR Code do alvo usará somente esse link, inclusive no PDF.</p>
+        </div>
+
         <!-- Painel de QR Codes Nativos (Preview em Tela) -->
         <div class="mt-4 pt-4 border-t border-slate-200 dark:border-zinc-800">
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -401,6 +521,7 @@ html.dark .warning-list {color:#d2d5d8;}
               <div id="ui_qr_alvo" class="qr-frame"></div>
               <div class="min-w-0">
                 <div class="text-[11px] font-bold uppercase text-slate-700 dark:text-zinc-200">QR Code: Alvo</div>
+                <div id="ui_qr_alvo_lbl" class="status-caption mt-1">Aguardando link de compartilhamento.</div>
               </div>
             </div>
             <div class="flex items-center gap-3 p-2.5 rounded-lg bg-slate-50 dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800">
@@ -562,7 +683,7 @@ html.dark .warning-list {color:#d2d5d8;}
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div class="neutral-surface space-y-3">
             <h3 class="font-bold text-sm">Endereço</h3>
-            <div class="metadata-field"><label for="ev_endereco_status">Confiabilidade</label><select id="ev_endereco_status" onchange="onEvidenceStatusChange('endereco')"><option value="nao_avaliado">Não avaliado</option><option value="nao_verificado">Não verificado</option><option value="hipotese">Hipótese</option><option value="confirmado">Confirmado (ponto conferido)</option></select></div>
+            <div class="metadata-field"><label for="ev_endereco_status">Confiabilidade</label><select id="ev_endereco_status" onchange="onEvidenceStatusChange('endereco')"><option value="nao_avaliado">Não avaliado</option><option value="nao_verificado">Não verificado</option><option value="hipotese">Hipótese</option><option value="confirmado">Confirmado (validação manual)</option></select></div>
             <div class="metadata-field"><label for="ev_endereco_fonte">Origem / fonte</label><input id="ev_endereco_fonte" type="text" placeholder="Ex.: visita, documento, mapa" /></div>
             <div class="metadata-field"><label for="ev_endereco_data">Data da informação</label><input id="ev_endereco_data" type="date" /></div>
           </div>
@@ -580,6 +701,17 @@ html.dark .warning-list {color:#d2d5d8;}
           </div>
         </div>
       </section>
+      <!-- Assinatura opcional, incluída no final do relatório impresso. -->
+      <section id="signature-upload-panel" class="bg-white dark:bg-zinc-900/80 border border-slate-200 dark:border-zinc-800 rounded-xl p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">Assinatura do Relatório</h2>
+          <button id="btn-remove-signature" type="button" onclick="removeSignatureImage()" class="px-3 py-1.5 border border-slate-300 dark:border-zinc-700 text-xs font-semibold" hidden>Remover assinatura</button>
+        </div>
+        <label for="signature_file" class="inline-flex px-3.5 py-2 border border-slate-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-xs font-semibold cursor-pointer">Anexar assinatura (imagem)</label>
+        <input id="signature_file" type="file" accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="handleSignatureUpload(event)" aria-label="Anexar imagem da assinatura" />
+        <img id="signature_preview" class="signature-preview" alt="Prévia da assinatura anexada" hidden />
+      </section>
+
       <!-- Acao principal: gerar o relatorio PDF (impressao do navegador). -->
       <div class="pt-2 pb-10 flex justify-center">
         <button id="btn-generate-pdf" type="button" onclick="prepareAndPrint()" class="w-full sm:w-auto px-8 py-4 text-sm sm:text-base font-extrabold transition flex items-center justify-center gap-2.5">
@@ -616,7 +748,7 @@ html.dark .warning-list {color:#d2d5d8;}
           <div class="p-grid" style="grid-template-columns:2fr 1fr 1.15fr;">
             <div><span class="p-label">Endereço informado</span><span class="p-val" id="p_endereco">—</span></div>
             <div><span class="p-label">Ponto de referência</span><span class="p-val" id="p_referencia">—</span></div>
-            <div><span class="p-label">Validação de localização</span><span class="p-val" id="p_geo_status">Endereço ainda não verificado</span><span class="p-note" id="p_geo_coords">—</span></div>
+            <div><span class="p-label">Validação manual do endereço</span><span class="p-val" id="p_geo_status">Endereço ainda não verificado</span><a class="p-note p-location-link" id="p_geo_maps_link" target="_blank" rel="noopener noreferrer">Link não informado</a></div>
           </div>
           <div class="p-divider"></div>
           <div class="p-grid" style="grid-template-columns:1fr 1fr;">
@@ -670,7 +802,7 @@ html.dark .warning-list {color:#d2d5d8;}
         <div id="p_targets_container" class="p-targets-grid"></div>
       </section>
       <div class="report-closing">
-        <div class="signature-area"><div class="signature-rule"></div><div class="signature-name">Assinatura</div></div>
+        <div class="signature-area"><img id="p_signature_image" class="p-signature-image" alt="Assinatura anexada" hidden /><div class="signature-rule"></div><div class="signature-name">Assinatura</div></div>
         <footer class="print-footer"><span>DOCUMENTO RESTRITO • CONFERIR ORIGEM E DATA DOS DADOS</span><span>LEVANTAMENTO144 • <span id="p_footer_emissao"></span></span></footer>
       </div>
     </article>
@@ -686,6 +818,38 @@ const DB_NAME = 'levantamento144_photos_v2';
 const DB_STORE = 'photos';
 
 const LOCATION_PHOTO_KEY = '__levantamento144_location_photo__';
+const SIGNATURE_PHOTO_KEY = '__levantamento144_signature_photo__';
+let signatureImage = '';
+function renderSignatureUI() {
+  const preview=$('signature_preview');
+  preview.hidden=!signatureImage;
+  if(signatureImage) preview.src=signatureImage;
+  else preview.removeAttribute('src');
+  $('btn-remove-signature').hidden=!signatureImage;
+}
+async function handleSignatureUpload(event) {
+  const file=event.target.files?.[0];if(!file)return;
+  try {
+    const image=await processImage(file,1200);
+    if(photoBackend==='ready') await photoStore('put',SIGNATURE_PHOTO_KEY,image);
+    signatureImage=image;renderSignatureUI();saveState();
+    showToast('Assinatura anexada ao final do relatório.');
+  } catch(e) {showToast('Falha ao anexar assinatura: '+(e.message||e),'error');}
+  finally {event.target.value='';}
+}
+async function removeSignatureImage() {
+  if(photoBackend==='ready') {
+    try {await photoStore('delete',SIGNATURE_PHOTO_KEY);}
+    catch(e) {showToast('Falha ao apagar assinatura armazenada.','error');return;}
+  }
+  signatureImage='';renderSignatureUI();saveState();
+}
+function prepareSignaturePrint() {
+  const image=$('p_signature_image');
+  image.hidden=!signatureImage;
+  if(signatureImage) image.src=signatureImage;
+  else image.removeAttribute('src');
+}
 const LOCATION_PHOTO_DEFAULT_WIDTH = 170;
 let locationPhoto = '';
 let locationPhotoWidth = LOCATION_PHOTO_DEFAULT_WIDTH;
@@ -751,7 +915,7 @@ const STATUS_LABELS = {
 const FIELD_IDS = [
   'op_nome', 'op_unidade', 'op_datahora', 'op_responsavel',
   'end_rua', 'end_num', 'end_bairro', 'end_cidade', 'end_ref',
-  'geo_lat', 'geo_lon',
+  'geo_maps_url', 'target_maps_share_url',
   'hosp_nome', 'hosp_dist', 'pol_nome', 'pol_dist',
   'q_imovel', 'q_armas', 'q_faccao', 'q_provavida', 'q_janela', 'q_veiculos',
   'stat_risco', 'stat_endereco', 'stat_presenca',
@@ -776,7 +940,7 @@ let routeUrls = {
   hosp: 'https://www.google.com/maps/search/hospital+upa',
   pol: 'https://www.google.com/maps/search/delegacia+de+policia'
 };
-let geoState = { confirmed: false, fingerprint: '', origin: '', fetchedAt: '' };
+let geoState = { confirmed:false, fingerprint:'', origin:'', fetchedAt:'', coords:null };
 let photoBackend = 'pending';
 let photoDbPromise = null;
 let initializing = false;
@@ -794,11 +958,55 @@ function escapeHtml(s) {
 function safePhotoData(s) {
   return (typeof s === 'string' && /^data:image\/(?:jpeg|png|webp);base64,[a-z0-9+/=]+$/i.test(s)) ? s : '';
 }
-function sanitizeMapsUrl(s, fallback) {
-  if (typeof s !== 'string') return fallback;
-  try { const u = new URL(s); return u.protocol === 'https:' && (u.hostname === 'www.google.com' || u.hostname === 'maps.google.com') && u.pathname.startsWith('/maps') ? u.href : fallback; }
-  catch (_) { return fallback; }
+function normalizedMapsUrl(raw) {
+  if(typeof raw!=='string'||!raw.trim())return '';
+  try {
+    const u=new URL(raw.trim());
+    if(u.protocol!=='https:'||u.username||u.password)return '';
+    const host=u.hostname.toLowerCase();
+    if(host==='maps.app.goo.gl' && u.pathname.length>1)return u.href;
+    const google=['www.google.com','google.com','maps.google.com','www.google.com.br','google.com.br'].includes(host);
+    if(google && (u.pathname.startsWith('/maps') || (host==='maps.google.com' && u.searchParams.has('q'))))return u.href;
+  } catch(_) {}
+  return '';
 }
+function sanitizeMapsUrl(s, fallback) {return normalizedMapsUrl(s)||fallback;}
+function validCoords(lat,lon) {
+  lat=Number(lat);lon=Number(lon);
+  return Number.isFinite(lat)&&Number.isFinite(lon)&&Math.abs(lat)<=90&&Math.abs(lon)<=180 ? {lat,lon} : null;
+}
+function coordsFromPair(s) {
+  const m=String(s||'').match(/^\s*(-?\d{1,2}(?:\.\d+)?),\s*(-?\d{1,3}(?:\.\d+)?)\s*$/);
+  return m?validCoords(m[1],m[2]):null;
+}
+function mapCoordsFromUrl(raw) {
+  const safe=normalizedMapsUrl(raw);if(!safe)return null;
+  const u=new URL(safe);
+  // Google Maps embeds the actual place as !3dLAT!4dLON; @LAT,LON may
+  // indicate only the viewport and is therefore a lower-priority fallback.
+  let m=safe.match(/!3d(-?\d+(?:\.\d+)?)!4d(-?\d+(?:\.\d+)?)/);
+  if(m)return validCoords(m[1],m[2]);
+  for(const k of ['query','q','ll','center','destination']) {
+    const found=coordsFromPair(u.searchParams.get(k));if(found)return found;
+  }
+  try {m=decodeURIComponent(u.pathname).match(/\/maps\/(?:place|search)\/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);}catch(_){m=null;}
+  if(m)return validCoords(m[1],m[2]);
+  m=safe.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+  return m?validCoords(m[1],m[2]):null;
+}
+function mapSearchText(raw) {
+  const safe=normalizedMapsUrl(raw);if(!safe)return '';
+  const u=new URL(safe);
+  const query=u.searchParams.get('query')||u.searchParams.get('q');
+  if(query && !coordsFromPair(query))return query.trim().slice(0,250);
+  const m=u.pathname.match(/\/maps\/place\/([^/]+)/);
+  if(m) {
+    try {return decodeURIComponent(m[1]).replace(/\+/g,' ').slice(0,250);}
+    catch(_) {return '';}
+  }
+  return '';
+}
+function mapFingerprint() {return getAddressText()+'\n'+value('geo_maps_url');}
 function showToast(message, kind = 'info') {
   const parent = $('toast-container');
   if (!parent) return;
@@ -867,7 +1075,7 @@ function renderTargets() {
   $('targets-list').innerHTML = targets.map((t, idx) => {
     const id = escapeHtml(t.id);
     const picture = safePhotoData(t.photo);
-    return `<div class="border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 p-3.5 flex flex-col xl:flex-row xl:items-center gap-3 ${picture ? 'target-card-with-photo' : ''}">
+    return `<div class="border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-950 p-3.5 flex flex-col xl:flex-row gap-3 target-editor-row ${picture ? 'target-card-with-photo' : ''}">
       <div class="flex items-start gap-2.5 shrink-0">
         <span class="font-mono text-xs font-bold text-slate-500 w-7">#${String(idx + 1).padStart(2, '0')}</span>
         <div class="relative">
@@ -877,7 +1085,7 @@ function renderTargets() {
            <input type="file" accept="image/jpeg,image/png,image/webp" class="hidden" onchange="handlePhotoUpload(event,'${id}')" aria-label="Anexar fotografia" /></label>`}
         </div>
       </div>
-      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 flex-1 min-w-0">
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-2.5 flex-1 min-w-0 target-fields">
         <div class="sm:col-span-5"><label for="target_nome_${id}" class="sr-only">Nome do investigado</label><input id="target_nome_${id}" type="text" placeholder="Nome do investigado" value="${escapeHtml(t.nome)}" oninput="updateTarget('${id}','nome',this.value)" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs" /></div>
         <div class="sm:col-span-3"><label for="target_vulgo_${id}" class="sr-only">Vulgo</label><input id="target_vulgo_${id}" type="text" placeholder="Vulgo" value="${escapeHtml(t.vulgo)}" oninput="updateTarget('${id}','vulgo',this.value)" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs" /></div>
         <div class="sm:col-span-4"><label for="target_cpf_${id}" class="sr-only">CPF</label><input id="target_cpf_${id}" type="text" inputmode="numeric" maxlength="14" placeholder="000.000.000-00" value="${escapeHtml(t.cpf)}" oninput="handleCPFInput(this,'${id}')" aria-describedby="cpf_msg_${id}" class="w-full border border-slate-300 dark:border-zinc-800 bg-white dark:bg-zinc-900 px-3 py-2 text-xs font-mono" />
@@ -992,80 +1200,75 @@ function getAddressText() {
 }
 function hasAddress() {return !!value('end_rua');}
 function currentCoords() {
-  const latText=value('geo_lat').replace(',','.'),lonText=value('geo_lon').replace(',','.');
-  if(!latText || !lonText || !/^-?\d+(?:\.\d+)?$/.test(latText) || !/^-?\d+(?:\.\d+)?$/.test(lonText))return null;
-  const lat=Number(latText),lon=Number(lonText);
-  if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
-  return {lat,lon};
+  const link=normalizedMapsUrl(value('geo_maps_url'));
+  if(!link)return null;
+  const direct=mapCoordsFromUrl(link);
+  if(direct)return direct;
+  if(geoState.fingerprint!==mapFingerprint())return null;
+  const coords=geoState.coords;
+  return coords&&validCoords(coords.lat,coords.lon);
 }
 function locationConfirmed() {
-  return !!(geoState.confirmed && geoState.fingerprint===getAddressText() && hasAddress() && currentCoords() && value('ev_endereco_status')==='confirmado');
+  return !!geoState.confirmed;
 }
 function renderGeoUI() {
-  const coords=currentCoords();
-  const confirmed=locationConfirmed();
-  text('geo-status',confirmed ? 'Localização confirmada' : (coords ? 'Coordenadas sugeridas — não confirmadas' : 'Endereço ainda não verificado'));
-  text('geo-origin', coords ? (geoState.origin || 'Coordenadas inseridas manualmente') : 'Nenhuma coordenada registrada.');
-  $('geo_confirm').disabled=!(coords && hasAddress());
-  $('geo_confirm').checked=confirmed;
-  const link=$('geo-preview-link');
-  link.href=coords ? `https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`
-    : (hasAddress()?`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getAddressText())}`:'https://www.google.com/maps');
-  link.textContent=coords ? 'Conferir coordenadas no mapa' : 'Consultar endereço no mapa';
+  $('geo_confirm').checked=locationConfirmed();
+}
+function invalidateAutoUnits() {
+  for(const key of ['hosp','pol']) {
+    if(value(key+'_dist').includes('(linha reta)')) {
+      $(key+'_nome').value='';$(key+'_dist').value='';
+    }
+    onManualUnitChange(key,false);
+  }
 }
 function onAddressChange() {
-  if (geoState.fingerprint && geoState.fingerprint !== getAddressText()) {
-    geoState = { confirmed:false, fingerprint:'', origin:'', fetchedAt:'' };
-    $('geo_lat').value='';$('geo_lon').value='';
-    // Distâncias derivadas de outro endereço não podem continuar aparentando precisão.
-    for (const id of ['hosp_dist','pol_dist']) {
-      if (value(id).includes('(linha reta)')) $(id).value = '';
-    }
+  // A manual confirmation is no longer applicable after the address changes.
+  geoState.confirmed=false;
+  if(geoState.fingerprint && geoState.fingerprint !== mapFingerprint()) {
+    geoState={confirmed:false,fingerprint:'',origin:'',fetchedAt:'',coords:null};
   }
-  if(value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
-  // Rotas e distâncias calculadas para endereço antigo não são mais consideradas atuais.
-  onManualUnitChange('hosp', false);
-  onManualUnitChange('pol', false);
+  if(value('ev_endereco_status')==='confirmado')$('ev_endereco_status').value='nao_verificado';
+  invalidateAutoUnits();
   refreshAllQRCodes();renderGeoUI();saveState();updateDashboard();
 }
-function onCoordinatesChange() {
-  geoState.confirmed=false;
-  geoState.fingerprint=getAddressText();
-  geoState.origin='Coordenadas informadas manualmente';
-  geoState.fetchedAt='';
-  if(value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
+function onMapUrlChange() {
+  // The search link changes only the cached location and nearest facilities.
+  const confirmed=geoState.confirmed;
+  geoState={confirmed,fingerprint:'',origin:'',fetchedAt:'',coords:null};
+  invalidateAutoUnits();
   refreshAllQRCodes();renderGeoUI();saveState();updateDashboard();
+}
+function onTargetShareUrlChange() {
+  refreshAllQRCodes();saveState();updateDashboard();
 }
 function confirmLocation(checked) {
-  if (checked && !(hasAddress() && currentCoords())) {
-    $('geo_confirm').checked=false;
-    showToast('Informe o logradouro e coordenadas válidas antes de confirmar.','warn');return;
-  }
   geoState.confirmed=!!checked;
-  geoState.fingerprint=getAddressText();
   $('ev_endereco_status').value=checked?'confirmado':'nao_verificado';
   renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
-  if(checked)showToast('Localização confirmada manualmente. Registre fonte e data.');
+  if(checked)showToast('Endereço confirmado por validação manual.');
 }
 function onEvidenceStatusChange(key) {
   if(key==='endereco') {
-    if(value('ev_endereco_status')==='confirmado' && !(geoState.confirmed && geoState.fingerprint===getAddressText() && currentCoords())) {
+    if(value('ev_endereco_status')==='confirmado' && !locationConfirmed()) {
       $('ev_endereco_status').value='nao_verificado';
-      showToast('Endereço confirmado exige coordenadas e conferência manual.','warn');
+      showToast('Marque a validação manual do endereço para confirmá-lo.','warn');
     }
     if(value('ev_endereco_status')!=='confirmado')geoState.confirmed=false;
   }
   renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
 }
 function buildTargetMapUrl() {
-  const coords=currentCoords();
-  if(locationConfirmed() && coords)return `https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`;
-  if(hasAddress())return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(getAddressText())}`;
-  return 'https://www.google.com/maps';
+  // Never substitute the support-search link or the typed address for this QR.
+  return normalizedMapsUrl(value('target_maps_share_url'));
 }
 function renderNativeQR(elementId,url,size) {
   const c=$(elementId);if(!c)return;
   c.replaceChildren();
+  if(!url) {
+    const marker=document.createElement('span');marker.className='qr-empty';
+    marker.textContent='Link não informado';c.append(marker);return;
+  }
   try {
     if(!window.LocalQR)throw new Error('Gerador local de QR não carregado');
     const bits=window.LocalQR.generate(url,'M');
@@ -1089,8 +1292,8 @@ function renderNativeQR(elementId,url,size) {
 }
 function refreshAllQRCodes() {
   routeUrls.alvo=buildTargetMapUrl();
-  const caption=locationConfirmed() ? 'Localização confirmada' : (hasAddress()?'Endereço não verificado':'Sem endereço informado');
-  text('ui_qr_alvo_lbl',caption);
+  const entered=!!value('target_maps_share_url');
+  text('ui_qr_alvo_lbl',routeUrls.alvo?'Link pronto para o QR Code':entered?'Confira o link do Google Maps':'Aguardando link de compartilhamento.');
   text('ui_qr_hosp_lbl',value('hosp_nome')||'Consulta de unidade médica');
   text('ui_qr_pol_lbl',value('pol_nome')||'Consulta de unidade policial');
   $('hosp_maps_link').href=routeUrls.hosp;
@@ -1114,47 +1317,87 @@ function haversineKm(lat1,lon1,lat2,lon2) {
   const a=Math.sin(dl/2)**2 + Math.cos(lat1*toRad)*Math.cos(lat2*toRad)*Math.sin(doLon/2)**2;
   return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
-async function findSupportUnits() {
-  if(!hasAddress()) {showToast('Informe o logradouro antes da busca.','warn');return;}
-  const btn=$('btn-locate-support'),original=btn.innerHTML;
-  btn.disabled=true;btn.textContent='Consultando mapa...';
-  const address=getAddressText();
-  try {
-    // A consulta é acionada pelo usuário; o endereço é enviado ao OSM (sem CPF/fotos).
-    const nomUrl=`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(address+', Brasil')}`;
-    const res=await fetch(nomUrl,{headers:{'Accept-Language':'pt-BR'}});
-    if(!res.ok)throw new Error('Falha no serviço de localização');
-    const data=await res.json();if(!Array.isArray(data)||!data[0])throw new Error('Endereço não encontrado no mapa');
-    if(getAddressText()!==address)throw new Error('Endereço alterado durante a busca: consulte novamente');
-    const lat=Number(data[0].lat),lon=Number(data[0].lon);
-    if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)throw new Error('Coordenadas incorretas');
-    $('geo_lat').value=lat.toFixed(6);$('geo_lon').value=lon.toFixed(6);
-    geoState={confirmed:false,fingerprint:address,origin:'Ponto sugerido pelo OpenStreetMap/Nominatim',fetchedAt:new Date().toISOString()};
-    if(value('ev_endereco_status')==='confirmado')$('ev_endereco_status').value='nao_verificado';
-    renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
-    const query=`[out:json][timeout:15];(node["amenity"="hospital"](around:15000,${lat},${lon});way["amenity"="hospital"](around:15000,${lat},${lon});node["amenity"="clinic"]["emergency"="yes"](around:15000,${lat},${lon});node["amenity"="police"](around:15000,${lat},${lon});way["amenity"="police"](around:15000,${lat},${lon}););out center 300;`;
-    let nearby=[];
+async function resolveMapsLocation(link) {
+  const direct=mapCoordsFromUrl(link);
+  if(direct)return {coords:direct,origin:'Ponto indicado no link do Google Maps'};
+  const u=new URL(link);
+  if(u.hostname==='maps.app.goo.gl') {
+    // Cloudflare Worker deployment resolves short links on the server;
+    // static GitHub Pages may not provide this optional endpoint.
+    let result;
     try {
-      const support=await fetch('https://overpass-api.de/api/interpreter',{method:'POST',body:query});
-      if(support.ok) {const raw=await support.json();nearby=Array.isArray(raw.elements)?raw.elements:[];}
-    } catch (_) {showToast('Coordenadas obtidas. Busca de unidades indisponível; preencha manualmente.','warn');}
-    if(getAddressText()!==address)throw new Error('Endereço alterado durante a busca: consulte novamente');
+      const r=await fetch('/api/resolve-map?url='+encodeURIComponent(link),{headers:{Accept:'application/json'}});
+      if(r.ok)result=await r.json();
+    }catch(_) {}
+    if(result?.url && normalizedMapsUrl(result.url)) {
+      const coords=mapCoordsFromUrl(result.url);
+      if(coords)return {coords,origin:'Localização do link curto do Google Maps'};
+      link=result.url;
+    } else throw new Error('Link curto não resolvido nesta publicação. Abra no Google Maps e copie o endereço completo da barra do navegador');
+  }
+  const searchText=mapSearchText(link);
+  if(!searchText)throw new Error('Link sem coordenadas identificáveis. Abra o ponto no Google Maps e copie o endereço completo');
+  // For text-only map searches, geocoding is an approximation, not proof
+  // that a particular address or street number exists.
+  const nomUrl=`https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(searchText)}`;
+  const res=await fetch(nomUrl,{headers:{'Accept-Language':'pt-BR'}});
+  if(!res.ok)throw new Error('Geocodificação do link indisponível');
+  const found=await res.json();
+  const coords=Array.isArray(found)&&found[0]?validCoords(found[0].lat,found[0].lon):null;
+  if(!coords)throw new Error('Local não encontrado no mapa; use um link com o ponto exato');
+  return {coords,origin:'Local aproximado a partir da busca do link (OpenStreetMap)'};
+}
+async function findSupportUnits() {
+  const link=normalizedMapsUrl(value('geo_maps_url'));
+  if(!link){showToast('Cole um link válido do Google Maps para localizar as unidades.','warn');return;}
+  const btn=$('btn-locate-support'),original=btn.innerHTML;
+  btn.disabled=true;btn.textContent='Consultando localização e unidades...';
+  const fingerprint=mapFingerprint();
+  try {
+    const result=await resolveMapsLocation(link);
+    if(fingerprint!==mapFingerprint())throw new Error('Localização alterada durante a busca; consulte novamente');
+    const {lat,lon}=result.coords;
+    const wasConfirmed=locationConfirmed();
+    geoState={confirmed:wasConfirmed,fingerprint,origin:result.origin,fetchedAt:new Date().toISOString(),coords:{lat,lon}};
+    renderGeoUI();refreshAllQRCodes();saveState();updateDashboard();
+    // OpenStreetMap/Overpass: nearest named medical/police facility by
+    // geodesic distance (straight line); Google Maps route shows road travel.
+    const query=`[out:json][timeout:25];(nwr["amenity"="hospital"](around:30000,${lat},${lon});nwr["healthcare"="hospital"](around:30000,${lat},${lon});nwr["healthcare"="urgent_care"](around:30000,${lat},${lon});nwr["name"~"^(UPA|Unidade de Pronto Atendimento)",i](around:30000,${lat},${lon});nwr["amenity"="clinic"]["emergency"="yes"](around:30000,${lat},${lon});nwr["amenity"="police"](around:30000,${lat},${lon}););out center 2000;`;
+    let nearby=[];
+    const endpoints=['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter'];
+    for(const endpoint of endpoints) {
+      try {
+        const response=await fetch(endpoint,{method:'POST',body:query});
+        if(!response.ok)continue;
+        const raw=await response.json();
+        if(Array.isArray(raw.elements)){nearby=raw.elements;break;}
+      } catch(_) {}
+    }
+    if(fingerprint!==mapFingerprint())throw new Error('Localização alterada durante a busca; consulte novamente');
     let hosp=null,pol=null;
     for(const e of nearby) {
-      const eLat=Number(e.lat??e.center?.lat),eLon=Number(e.lon??e.center?.lon);
-      if(!Number.isFinite(eLat)||!Number.isFinite(eLon))continue;
-      const tags=e.tags||{}, name=tags.name||tags['name:pt'];if(!name)continue;
-      const dist=haversineKm(lat,lon,eLat,eLon);
-      const cand={name,lat:eLat,lon:eLon,dist};
-      if(['hospital','clinic'].includes(tags.amenity) && (!hosp||dist<hosp.dist))hosp=cand;
-      if(tags.amenity==='police' && (!pol||dist<pol.dist))pol=cand;
+      const point=validCoords(e.lat??e.center?.lat,e.lon??e.center?.lon);
+      if(!point)continue;
+      const tags=e.tags||{},name=tags.name||tags['name:pt']||tags.official_name;
+      if(!name)continue;
+      const dist=haversineKm(lat,lon,point.lat,point.lon);
+      const cand={name,lat:point.lat,lon:point.lon,dist};
+      if((tags.amenity==='hospital'||tags.healthcare==='hospital'||tags.healthcare==='urgent_care'||
+          (tags.amenity==='clinic'&&tags.emergency==='yes')||/^(UPA|Unidade de Pronto Atendimento)/i.test(name))&&(!hosp||dist<hosp.dist))hosp=cand;
+      if(tags.amenity==='police'&&(!pol||dist<pol.dist))pol=cand;
     }
-    if(hosp){$('hosp_nome').value=hosp.name;$('hosp_dist').value=hosp.dist.toFixed(1).replace('.',',')+' km (linha reta)';routeUrls.hosp=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${hosp.lat},${hosp.lon}&travelmode=driving`;}
-    if(pol){$('pol_nome').value=pol.name;$('pol_dist').value=pol.dist.toFixed(1).replace('.',',')+' km (linha reta)';routeUrls.pol=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${pol.lat},${pol.lon}&travelmode=driving`;}
+    for(const [key,unit] of [['hosp',hosp],['pol',pol]]) {
+      if(!unit)continue;
+      $(key+'_nome').value=unit.name;
+      $(key+'_dist').value=unit.dist.toFixed(1).replace('.',',')+' km (linha reta)';
+      routeUrls[key]=`https://www.google.com/maps/dir/?api=1&origin=${lat},${lon}&destination=${unit.lat},${unit.lon}&travelmode=driving`;
+    }
     refreshAllQRCodes();saveState();updateDashboard();
-    showToast('Coordenadas sugeridas. Confira no mapa e confirme manualmente.');
-  } catch(e) {showToast((e.message||'Consulta externa indisponível')+'. Tente outra forma de registro.','warn');}
-  finally {btn.disabled=false;btn.innerHTML=original;}
+    if(hosp&&pol) showToast('Hospital/UPA e delegacia mais próximos localizados (distâncias em linha reta).');
+    else if(hosp||pol)showToast('Uma unidade localizada. A outra não foi encontrada no mapa; informe manualmente.','warn');
+    else showToast('Local do link identificado, mas não foi possível encontrar unidades próximas; informe manualmente.','warn');
+  } catch(e){showToast((e.message||'Consulta externa indisponível')+'.','warn');}
+  finally{btn.disabled=false;btn.innerHTML=original;}
 }
 function statNumber(key) {
   const slider = $('stat_' + key);
@@ -1180,6 +1423,7 @@ function updateStats(shouldSave=true) {
     bar.style.width=n===null?'0%':`${n}%`;
     bar.style.backgroundColor=color;
     slider.disabled=false;
+    slider.style.setProperty('--range-progress',n===null?'0%':n+'%');
   });
   if(shouldSave){saveState();updateDashboard();}
 }
@@ -1193,7 +1437,7 @@ function readWarnings() {
   if(!value('op_datahora'))warnings.push('Data e hora previstas não informadas.');
   if(!value('op_responsavel'))warnings.push('Responsável pela elaboração não informado.');
   if(!hasAddress())warnings.push('Logradouro do endereço não informado.');
-  else if(!locationConfirmed())warnings.push('Endereço ainda não verificado por coordenadas e conferência manual.');
+  else if(!locationConfirmed())warnings.push('Endereço ainda não confirmado por validação manual.');
   const used=targets.filter(t=>t.nome.trim()||t.vulgo.trim()||t.cpf.trim()||t.photo);
   if(!used.length)warnings.push('Nenhum alvo identificado foi informado.');
   used.forEach((t,i)=>{
@@ -1256,9 +1500,13 @@ async function prepareAndPrint() {
   setPrint('p_endereco',hasAddress()?getAddressText():'Não informado');
   setPrint('p_referencia',labelIfBlank(value('end_ref')));
   prepareLocationPhotoPrint();
-  setPrint('p_geo_status',locationConfirmed()?'Localização confirmada':'Endereço ainda não verificado');
-  const coords=currentCoords();
-  setPrint('p_geo_coords',coords ? `${coords.lat.toFixed(6)}, ${coords.lon.toFixed(6)}${locationConfirmed()?' • conferência manual':' • ponto não confirmado'}` : 'Coordenadas não disponíveis');
+  prepareSignaturePrint();
+  setPrint('p_geo_status',locationConfirmed()?'Conferido manualmente':'Não conferido manualmente');
+  const mapUrl=buildTargetMapUrl();
+  const printedMapLink=$('p_geo_maps_link');
+  printedMapLink.textContent=mapUrl?'Abrir link de compartilhamento do Google Maps':'Link de compartilhamento não informado';
+  if(mapUrl)printedMapLink.href=mapUrl;
+  else printedMapLink.removeAttribute('href');
   setPrint('p_hospital',labelIfBlank(value('hosp_nome')));
   setPrint('p_hosp_dist',value('hosp_dist')?'Distância indicada: '+value('hosp_dist'):'Distância não informada');
   setPrint('p_delegacia',labelIfBlank(value('pol_nome')));
@@ -1308,7 +1556,7 @@ function composeState(includePhotos=false) {
   return {
     format:'levantamento144-v2', version:2,fields,checks,targets:targets.map(t=>includePhotos?{...t}:{id:t.id,nome:t.nome,vulgo:t.vulgo,cpf:t.cpf}),
     geoState:{...geoState},routeUrls:{...routeUrls},
-    locationPhotoWidth, ...(includePhotos ? {locationPhoto} : {}),
+    locationPhotoWidth, ...(includePhotos ? {locationPhoto,signatureImage} : {}),
     exportedAt:includePhotos?new Date().toISOString():undefined
   };
 }
@@ -1321,6 +1569,15 @@ function saveState() {
   }catch(e){
     if(!storageWarned){showToast('Memória local cheia. Seus dados permanecem nesta aba, mas alterações podem não ser salvas. Exporte um backup.','error');storageWarned=true;}
   }
+}
+function migrateLegacyMapLink(fields) {
+  if(value('geo_maps_url')||!fields)return false;
+  const a=String(fields.geo_lat||'').replace(',','.');
+  const b=String(fields.geo_lon||'').replace(',','.');
+  const coords=coordsFromPair(a+','+b);
+  if(!coords)return false;
+  $('geo_maps_url').value=`https://www.google.com/maps/search/?api=1&query=${coords.lat},${coords.lon}`;
+  return true;
 }
 function loadState() {
   const raw=safeGetItem(STORAGE_KEY)||safeGetItem(LEGACY_STORAGE_KEY);
@@ -1339,6 +1596,7 @@ function loadState() {
         $(id).value=raw!=='' && raw!=null && Number.isFinite(n) && n>=0 && n<=100 ? String(Math.round(n)) : '50';
       }
     }
+    const migratedMap=migrateLegacyMapLink(state.fields);
     if(state.checks && typeof state.checks==='object')CHECKBOX_IDS.forEach(id=>{if(typeof state.checks[id]==='boolean')$(id).checked=state.checks[id];});
     if(Array.isArray(state.targets)&&state.targets.length) {
       targets=state.targets.slice(0,MAX_TARGETS).map(t=>({
@@ -1348,15 +1606,18 @@ function loadState() {
       }));
     }
     locationPhoto = safePhotoData(state.locationPhoto);
+    signatureImage = safePhotoData(state.signatureImage);
     locationPhotoWidth = validLocationPhotoWidth(state.locationPhotoWidth);
     if(state.geoState && typeof state.geoState==='object')geoState={
       confirmed:!!state.geoState.confirmed,fingerprint:String(state.geoState.fingerprint||''),
-      origin:String(state.geoState.origin||''),fetchedAt:String(state.geoState.fetchedAt||'')
+      origin:String(state.geoState.origin||''),fetchedAt:String(state.geoState.fetchedAt||''),
+      coords:validCoords(state.geoState.coords?.lat,state.geoState.coords?.lon)
     };
+    if(migratedMap && geoState.fingerprint===getAddressText())geoState.fingerprint=mapFingerprint();
     if(state.routeUrls && typeof state.routeUrls==='object') {
       for(const k of ['hosp','pol'])routeUrls[k]=sanitizeMapsUrl(state.routeUrls[k],routeUrls[k]);
     }
-    if(geoState.fingerprint!==getAddressText())geoState.confirmed=false;
+    if(geoState.fingerprint!==mapFingerprint())geoState.coords=null;
     // Os valores 50/80/75 e os primeiros itens do questionário na versão
     // anterior eram pré-atribuídos: não contam como fatos confirmados.
     if (!safeGetItem(STORAGE_KEY) && safeGetItem(LEGACY_STORAGE_KEY)) {
@@ -1364,9 +1625,8 @@ function loadState() {
       for (const key of STAT_KEYS) $('stat_'+key).value = '50';
       showToast('Rascunho anterior importado. Valores antes preenchidos por padrão foram marcados como Não avaliado.', 'warn');
     }
-    if(geoState.fingerprint!==getAddressText() || !currentCoords()) {
-      geoState.confirmed=false;
-      if (value('ev_endereco_status')==='confirmado') $('ev_endereco_status').value='nao_verificado';
+    if(geoState.fingerprint!==mapFingerprint()) {
+      geoState.fingerprint='';geoState.origin='';geoState.fetchedAt='';geoState.coords=null;
     }
     return true;
   }catch(e){console.warn('Rascunho local inválido:',e);showToast('Não foi possível ler o rascunho anterior.','warn');return false;}
@@ -1381,13 +1641,15 @@ async function initializePhotos() {
     }
     if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
     else locationPhoto = safePhotoData(await photoStore('get', LOCATION_PHOTO_KEY));
+    if(signatureImage) await photoStore('put', SIGNATURE_PHOTO_KEY, signatureImage);
+    else signatureImage = safePhotoData(await photoStore('get', SIGNATURE_PHOTO_KEY));
     photoBackend='ready';
     safeRemoveItem(LEGACY_STORAGE_KEY);
   }catch(e){
     photoBackend='fallback';
     showToast('IndexedDB indisponível. Fotos tentarão ser salvas no armazenamento local convencional.','warn');
   }
-  renderTargets();renderLocationPhotoUI();saveState();
+  renderTargets();renderLocationPhotoUI();renderSignatureUI();saveState();
 }
 function exportBackup() {
   try {
@@ -1421,18 +1683,21 @@ async function importBackup(event) {
         id:typeof t.id==='string'&&/^[a-zA-Z0-9-]{1,72}$/.test(t.id)?t.id:createId(),
         nome:String(t.nome||'').slice(0,800),vulgo:String(t.vulgo||'').slice(0,800),cpf:formatCPF(String(t.cpf||'')),photo:safePhotoData(t.photo)
       }));
+      migrateLegacyMapLink(obj.fields);
       locationPhoto = safePhotoData(obj.locationPhoto);
+      signatureImage = safePhotoData(obj.signatureImage);
       locationPhotoWidth = validLocationPhotoWidth(obj.locationPhotoWidth);
-      geoState={confirmed:!!obj.geoState?.confirmed,fingerprint:String(obj.geoState?.fingerprint||''),origin:String(obj.geoState?.origin||''),fetchedAt:String(obj.geoState?.fetchedAt||'')};
+      geoState={confirmed:!!obj.geoState?.confirmed,fingerprint:String(obj.geoState?.fingerprint||''),origin:String(obj.geoState?.origin||''),fetchedAt:String(obj.geoState?.fetchedAt||''),coords:validCoords(obj.geoState?.coords?.lat,obj.geoState?.coords?.lon)};
+      if(!obj.fields.geo_maps_url && geoState.fingerprint===getAddressText())geoState.fingerprint=mapFingerprint();
       routeUrls={alvo:'https://www.google.com/maps',hosp:sanitizeMapsUrl(obj.routeUrls?.hosp,'https://www.google.com/maps/search/hospital+upa'),pol:sanitizeMapsUrl(obj.routeUrls?.pol,'https://www.google.com/maps/search/delegacia+de+policia')};
-      if(geoState.fingerprint !== getAddressText() || !currentCoords()) {
-        geoState.confirmed = false;
-        if (value('ev_endereco_status') === 'confirmado') $('ev_endereco_status').value = 'nao_verificado';
+      if(geoState.fingerprint !== mapFingerprint()) {
+        geoState.fingerprint='';geoState.origin='';geoState.fetchedAt='';geoState.coords=null;
       }
       if(photoBackend==='ready'){
         await photoStore('clear');
         for(const t of targets)if(t.photo)await photoStore('put',t.id,t.photo);
         if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
+        if(signatureImage) await photoStore('put', SIGNATURE_PHOTO_KEY, signatureImage);
       }
     }catch(e){
       // Repor a cópia em memória se a importação falhar.
@@ -1440,17 +1705,19 @@ async function importBackup(event) {
       for(const id of CHECKBOX_IDS)$(id).checked=!!backupCurrent.checks[id];
       targets=backupCurrent.targets;
       locationPhoto=backupCurrent.locationPhoto;
+      signatureImage=backupCurrent.signatureImage;
       locationPhotoWidth=validLocationPhotoWidth(backupCurrent.locationPhotoWidth);
       geoState=backupCurrent.geoState;routeUrls=backupCurrent.routeUrls;
       if(photoBackend==='ready') {
         await photoStore('clear');
         for(const t of targets)if(t.photo)await photoStore('put',t.id,t.photo);
         if(locationPhoto) await photoStore('put', LOCATION_PHOTO_KEY, locationPhoto);
+        if(signatureImage) await photoStore('put', SIGNATURE_PHOTO_KEY, signatureImage);
       }
-      renderLocationPhotoUI();
+      renderLocationPhotoUI();renderSignatureUI();
       throw e;
     } finally{initializing=false;}
-    lastQrValues={};renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
+    lastQrValues={};renderTargets();renderLocationPhotoUI();renderSignatureUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
     showToast('Backup importado com sucesso. Confira a origem das informações.');
   }catch(e){initializing=false;showToast('Não foi possível importar: '+(e.message||e),'error');}
 }
@@ -1466,11 +1733,11 @@ async function resetAll() {
     else el.value='';
   });
   CHECKBOX_IDS.forEach(id=>$(id).checked=false);
-  locationPhoto='';locationPhotoWidth=LOCATION_PHOTO_DEFAULT_WIDTH;
+  locationPhoto='';signatureImage='';locationPhotoWidth=LOCATION_PHOTO_DEFAULT_WIDTH;
   targets=[newTarget()];routeUrls={alvo:'https://www.google.com/maps',hosp:'https://www.google.com/maps/search/hospital+upa',pol:'https://www.google.com/maps/search/delegacia+de+policia'};
-  geoState={confirmed:false,fingerprint:'',origin:'',fetchedAt:''};lastQrValues={};storageWarned=false;
+  geoState={confirmed:false,fingerprint:'',origin:'',fetchedAt:'',coords:null};lastQrValues={};storageWarned=false;
   initializing=false;
-  renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
+  renderTargets();renderLocationPhotoUI();renderSignatureUI();renderGeoUI();refreshAllQRCodes();updateStats(false);saveState();updateDashboard();
   showToast('Formulário limpo após confirmação.');
 }
 window.addEventListener('DOMContentLoaded', async () => {
@@ -1478,7 +1745,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   initializing=true;
   loadState();
   initializing=false;
-  renderTargets();renderLocationPhotoUI();renderGeoUI();refreshAllQRCodes();updateStats(false);updateDashboard();
+  renderTargets();renderLocationPhotoUI();renderSignatureUI();renderGeoUI();refreshAllQRCodes();updateStats(false);updateDashboard();
   FIELD_IDS.forEach(id=>{
     const el=$(id);if(!el)return;
     el.addEventListener('change',()=>{saveState();updateDashboard();});
